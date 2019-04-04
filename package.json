@@ -1,0 +1,47 @@
+{
+  "name": "ttp-fs",
+  "version": "0.0.1",
+  "private": true,
+  "description": "full stack assesment",
+  "main": "index.js",
+  "scripts": {
+    "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
+    "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
+    "start-js": "react-scripts start",
+    "start": "npm-run-all -p watch-css start-js",
+    "build-js": "react-scripts build",
+    "build": "npm-run-all build-css build-js",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/josuerojasrojas/TTP-FS.git"
+  },
+  "dependencies": {
+    "firebase": "^5.9.2",
+    "node-sass-chokidar": "^1.3.4",
+    "npm-run-all": "^4.1.5",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6",
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "2.1.8"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "author": "josuerojasrojas",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/josuerojasrojas/TTP-FS/issues"
+  },
+  "homepage": "https://github.com/josuerojasrojas/TTP-FS#readme"
+}
