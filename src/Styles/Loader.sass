@@ -1,0 +1,42 @@
+@import './mixins.sass'
+
+$firstColor: rgba(55, 234, 206, 1)
+$inverseFirst: rgb(54, 74, 100)
+$secColor: rgba(255, 255, 255, .1)
+$inverseSec: rgba(255, 255, 255, .7)
+$loaderSize: 7px
+
+.loader-wrapper
+  position: absolute
+  top: 0
+  left: 0
+  // background-color: rgba(0, 0, 0, 1)
+  display: none
+  justify-content: center
+  align-items: center
+  height: 100%
+  width: 100%
+  z-index: 2
+  &.active
+    display: flex
+  .loader
+    width: 64px
+    height: 64px
+    border-radius: 100%
+    border-top: $loaderSize solid $secColor
+    border-bottom: $loaderSize solid $secColor
+    border-left: $loaderSize solid $firstColor
+    border-right: $loaderSize solid $firstColor
+    animation: spin 1s linear infinite
+    &.inverse
+      border-left-color: $inverseFirst
+      border-right-color: $inverseFirst
+      border-bottom-color: $inverseSec
+      border-top-color: $inverseSec
+
+
++keyframes(spin)
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(360deg)

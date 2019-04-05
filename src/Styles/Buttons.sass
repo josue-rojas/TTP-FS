@@ -1,0 +1,58 @@
+@import './Colors.sass'
+
+.button
+  display: inline-block
+  min-width: 90px
+  padding: 8px 10px
+  color: white
+  border-radius: 15px
+  cursor: pointer
+  user-select: none
+  text-align: center
+  font-size: .9rem
+
+.rg
+  background-image: $leftGradient
+  background-size: 100% 100%
+  min-width: 100px
+  box-shadow: 0px 3px 10px rgba(0, 0, 0, .4)
+  transition: 200ms background-size
+  &:hover
+    background-size: 400% 400%
+  &.inverse
+    background-image: $rightGradient
+
+.tgl
+  position: relative
+  background-color: $dark_blue_shade
+  z-index: 1
+  text-align: center
+  &::before
+    content: ""
+    display: inline-block
+    width: 50%
+    height: 100%
+    position: absolute
+    z-index: -1
+    top: 0
+    box-shadow: 0 15px 10px rgba(0, 0, 0, .1)
+    transition: left 200ms, border-radius 200ms
+    background-image: linear-gradient($light_blue_top, $light_blue_bottom)
+  .text
+    z-index: 3
+    min-width: 90px
+    display: inline-block
+    width: 50%
+    transition: color 250ms
+  &.off
+    .f-state
+      color: $shadow_text
+    &::before
+      left: 50%
+      border-radius: 0px 15px 15px 0px
+  &.on
+    .s-state
+      color: $shadow_text
+    &::before
+      left: 0%
+      border-radius: 15px 0px 0px 15px

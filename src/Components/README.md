@@ -1,0 +1,1 @@
+This folder is for Components. meaning these are not build for the site unless given props. They are not specific for this site. (I tried to make these as reusable as i can so it can be use on other react apps)
