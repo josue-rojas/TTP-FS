@@ -3,7 +3,7 @@ import Button from '../Components/Buttons';
 import MenuIcon from '../Components/MenuIcon';
 import StocksCard from '../Components/StocksCard';
 import { withRouter } from "react-router-dom";
-import '../Styles/UserPanel.css';
+import '../Styles/UserFirstPanel.css';
 import Logo from './Logo';
 
 // sample data for now
@@ -11,10 +11,11 @@ let stockInfo = [
   {name: 'AAPL', price: '100', amount: '10'},
   {name: 'SNAP', price: '10', amount: '100'},
   {name: 'NERV', price: '9', amount: '14'},
+  {name: 'BPMX', price: '.009', amount: '1004'},
 ];
 
 // one of the props include the user so we won't have to send another request
-class UserPanel extends React.Component {
+class UserFirstPanel extends React.Component {
   constructor(props){
     super(props);
     this.signout = this.signout.bind(this);
@@ -67,4 +68,4 @@ class UserPanel extends React.Component {
   }
 }
 
-export default withRouter(UserPanel);
+export default withRouter(UserFirstPanel);
