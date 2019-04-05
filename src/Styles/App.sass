@@ -1,0 +1,74 @@
+@import './Colors.sass'
+@import './mixins.sass'
+
+.App
+  text-align: center
+  width: 100vw
+  min-height: 100vh
+  .two-panels
+    min-height: 100vh
+    .panel
+      .panel-content
+        min-height: 100%
+
+.slideshow-panel, .signin-panel, .user-panel
+  padding: 15px 20px
+  box-sizing: border-box
+  text-align: left
+
+$animationDelay: 750ms
+.two-panels
+  // transitions for only-active panels
+  // there is a bad transition in desktop where it remove the
+  // non active panel so it is better to change the .two-panels background
+  // of the non active to make it seem smoother
+  .first-panel, .sec-panel
+    min-height: 0vh
+    max-height: 100vh
+    overflow-y: hidden
+    transition: $animationDelay min-height ease, $animationDelay width ease, $animationDelay max-height ease, $animationDelay max-width ease
+    +medium-devices
+      min-height: 100vh
+      max-width: 50%
+      overflow-x: hidden
+      overflow-y: initial
+      max-height: none
+      .slides
+        width: calc(50vw - 40px)
+      .signin-panel
+        white-space: nowrap
+  &.fActive, &.sActive
+    overflow-y: hidden
+    max-height: 100vh
+    +medium-devices
+      overflow-y: auto
+      overflow-x: hidden
+  &.fActive
+    .sec-panel
+      max-height: 0
+    .first-panel
+      min-height: 100vh
+      overflow-y: scroll
+      -webkit-overflow-scrolling: touch
+    +medium-devices
+      .sec-panel
+        max-height: none
+        max-width: 0
+      .first-panel
+        max-width: 100%
+        width: 100%
+
+  &.sActive
+    .first-panel
+      max-height: 0
+    .sec-panel
+      min-height: 100vh
+      overflow-y: scroll
+      -webkit-overflow-scrolling: touch
+    +medium-devices
+      .first-panel
+        max-height: none
+        max-width: 0
+      .sec-panel
+        max-width: 100%
+        width: 100%

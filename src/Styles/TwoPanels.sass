@@ -1,0 +1,12 @@
+@import './mixins.sass'
+
+.two-panels
+  display: flex
+  flex-direction: row
+  min-width: 100%
+  flex-wrap: wrap
+  .panel
+    width: 100%
+    // flex: 1 1 auto
+    +medium-devices
+      width: 50%

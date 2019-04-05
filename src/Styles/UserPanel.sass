@@ -1,0 +1,46 @@
+@import './Colors.sass'
+@import './mixins.sass'
+
+.user-panel
+  background-image: $leftGradient
+  min-height: 100px
+  display: flex
+  flex-direction: column
+  text-align: center
+  color: $dark_blue_bottom
+  font-size: 1.2rem
+  a
+    font-size: 1.2rem
+    color: inherit
+    border: 0
+  .avatar-wrapper
+    margin-bottom: 10px
+  .welcome-message
+    .title
+      font-size: 1.5rem
+      font-weight: 800
+    p
+      margin: 10px
+      margin-bottom: 15px
+  .progress-message
+    padding: 0px 10px
+    font-size: 1rem
+    .small-text
+      font-size: .7rem
+    .progress
+      margin: 7px 0 0
+    p
+      margin: 8px 0
+    .reg-text
+      font-size: 1rem
+  .content-wrapper
+    margin: auto
+    width: 100%
+    +medium-devices
+      width: calc(50vw - 40px)
+      max-width: 600px
+  .button-wrapper
+    margin: 15px 0 10px
+
+.bold
+  font-weight: 600

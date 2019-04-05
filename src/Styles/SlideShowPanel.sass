@@ -1,0 +1,28 @@
+@import './Colors.sass'
+@import './mixins.sass'
+
+.slideshow-panel
+  background-image: $leftGradient
+  min-height: 100px
+  display: flex
+  flex-direction: column
+  .slides
+    margin: auto
+  .icon
+    display: none
+  +medium-devices
+    min-height: 100vh
+    flex-direction: column
+    .icon
+      display: block
+    .slides
+      display: flex
+      flex-direction: column
+      flex: 1
+      .text-wrapper
+        margin-top: auto
+      .slideshow-wrapper
+        margin-bottom: 30px
+      .dots-wrapper
+        margin-top: auto
+        margin-bottom: 30px

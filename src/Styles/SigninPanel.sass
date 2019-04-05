@@ -1,0 +1,45 @@
+@import './Colors.sass'
+@import './mixins.sass'
+
+.signin-panel
+  background-image: $rightGradient
+  box-shadow: -10px 2px 15px rgba(0, 0, 0, .1)
+  display: flex
+  flex-direction: column
+  .button.tgl
+    float: right
+  .form-wrapper
+    margin: auto 0
+    width: 100%
+    padding: 40px 5%
+    .title
+      a
+        font-size: 1.2rem
+      .shadow-text
+        font-size: .9rem
+    form
+      margin-top: 30px
+      position: relative
+      &.inactive
+        filter: blur(2px)
+      .input
+        margin: 15px 0
+      .checkbox
+        display: flex
+        margin-bottom: 30px
+        .checkbox-text
+          display: inline-block
+          height: 100%
+          align-items: center
+      .button
+        display: inline-block
+        margin-left: 3px
+      .extra-link
+        display: inline-block
+        margin-left: 15px
+        a
+          color: $shadow_text
+  +medium-devices
+    min-height: 100vh
+    .form-wrapper
+      padding: 10%
