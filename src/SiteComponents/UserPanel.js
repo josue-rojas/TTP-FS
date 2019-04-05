@@ -1,8 +1,17 @@
 import React from 'react';
 import Button from '../Components/Buttons';
+import MenuIcon from '../Components/MenuIcon';
+import StocksCard from '../Components/StocksCard';
 import { withRouter } from "react-router-dom";
 import '../Styles/UserPanel.css';
 import Logo from './Logo';
+
+// sample data for now
+let stockInfo = [
+  {name: 'AAPL', price: '100', amount: '10'},
+  {name: 'SNAP', price: '10', amount: '100'},
+  {name: 'NERV', price: '9', amount: '14'},
+];
 
 // one of the props include the user so we won't have to send another request
 class UserPanel extends React.Component {
@@ -31,9 +40,21 @@ class UserPanel extends React.Component {
     if(!this.props.user) return '...'
     return(
       <div className='user-panel panel-content'>
-        <Logo/>
+        <div className='top-header'>
+          <Logo/>
+          <MenuIcon
+            isActive={this.props.sActive}
+            onClick={this.props.toggleSPanel}/>
+        </div>
         <div className='content-wrapper'>
-          Hello {this.props.user.displayName || ''}!
+          <span>{this.props.user.displayName || ''} Portfolio!</span>
+          <div className='total'>
+            <span>Total $50000.00</span>
+          </div>
+          <div className='user-card'>
+            <StocksCard
+              stockInfo={stockInfo}/>
+          </div>
         </div>
         <div className='button-wrapper' id='#signout'>
           <Button
