@@ -15,7 +15,7 @@ export default class UserTrade extends React.Component {
         val: '',
         hasError: false,
       },
-      stockPrice: {
+      stockAmount: {
         val: '',
         hasError: false,
       },
@@ -23,7 +23,7 @@ export default class UserTrade extends React.Component {
     }
     this.checkInput = {
       stockName: hasInput,
-      stockPrice: hasInput,
+      stockAmount: hasInput,
     }
     this.onInputChange = this.onInputChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
@@ -58,11 +58,11 @@ export default class UserTrade extends React.Component {
           hasError={this.state.stockName.hasError}
           onChange={(e) => this.onInputChange(e, 'stockName')}/>
         <TextInput
-          title='STOCK PRICE'
-          placeholder='Price to buy'
-          val={this.state.stockPrice.val}
-          hasError={this.state.stockPrice.hasError}
-          onChange={(e) => this.onInputChange(e, 'stockPrice')}/>
+          title='AMOUNT'
+          placeholder='Amount to buy'
+          val={this.state.stockAmount.val}
+          hasError={this.state.stockAmount.hasError}
+          onChange={(e) => this.onInputChange(e, 'stockAmount')}/>
         <Button
           text='Send'
           onClick={this.submitForm}/>

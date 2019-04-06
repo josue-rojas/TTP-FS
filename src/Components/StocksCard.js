@@ -1,5 +1,6 @@
 // a component to show stocks in a nice table
 import React from 'react';
+import PlainCard from './PlainCard';
 import '../Styles/StocksCard.css';
 
 function SingleStock(props){
@@ -49,12 +50,12 @@ export default class StocksCard extends React.Component {
 
   render(){
     return(
-      <div className='stock-card'>
+      <PlainCard className='stock-card'>
         {this.props.withDate ?
           this.makeDateStockRow(this.props.stockInfo || []):
           this.makeDefaultStockRow(this.props.stockInfo || [])
         }
-      </div>
+      </PlainCard>
     )
   }
 }

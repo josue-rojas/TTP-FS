@@ -2,6 +2,7 @@ import React from 'react';
 import Button from '../Components/Buttons';
 import MenuIcon from '../Components/MenuIcon';
 import StocksCard from '../Components/StocksCard';
+import PlainCard from '../Components/PlainCard';
 import { withRouter } from "react-router-dom";
 import '../Styles/UserFirstPanel.css';
 import Logo from './Logo';
@@ -48,10 +49,10 @@ class UserFirstPanel extends React.Component {
             onClick={this.props.toggleSPanel}/>
         </div>
         <div className='content-wrapper'>
-          <span>{this.props.user.displayName || ''} Portfolio!</span>
-          <div className='total'>
-            <span>Total $50000.00</span>
-          </div>
+          <PlainCard className='user-info'>
+            <div>Total</div>
+            <div className='total'>$50000.00</div>
+          </PlainCard>
           <div className='user-card'>
             <StocksCard
               stockInfo={stockInfo}/>

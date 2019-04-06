@@ -8,7 +8,7 @@ export default class UserSecondPanel extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      historyPanel: true
+      historyPanel: false
     }
     this.toggleForms = this.toggleForms.bind(this);
   }
