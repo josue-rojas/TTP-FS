@@ -21,6 +21,35 @@ function SingleStock(props){
   )
 }
 
+// TODO: change date to date object and extract the data
+function SingleStockWithDate(props){
+  return(
+    <div className='single-stock'>
+      <div className='left-info'>
+        <div className='left-column right-line date'>
+          <div>
+            {props.date.month}
+          </div>
+          <div>
+            {props.date.year}
+          </div>
+        </div>
+        <div className='left-column'>
+          <div className='stock-name'>
+            {props.stockName}
+          </div>
+          <div className='amount'>
+            {props.stockAmount} Shares
+          </div>
+        </div>
+      </div>
+      <div className='right-info'>
+        <span>{props.price}</span>
+      </div>
+    </div>
+  )
+}
+
 export default class StocksCard extends React.Component {
   makeDefaultStockRow(stockInfo){
     let singleStocks = stockInfo.map((e)=>{
@@ -38,7 +67,8 @@ export default class StocksCard extends React.Component {
   makeDateStockRow(stockInfo){
     let singleStocks = stockInfo.map((e)=>{
       return(
-        <SingleStock
+        <SingleStockWithDate
+          date={e.date}
           key={`single-stock-${e.name}`}
           stockName={e.name}
           stockAmount={e.amount}

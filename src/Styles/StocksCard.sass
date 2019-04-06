@@ -1,5 +1,7 @@
 @import './Colors.sass'
 
+$line-color: #dcdfe4
+
 .stock-card
   padding: 0px
   .single-stock
@@ -9,9 +11,29 @@
     align-items: center
     padding: 7px
     width: 100%
-    border-bottom: 1px solid #dcdfe4
+    border-bottom: 1px solid $line-color
     .left-info
       text-align: left
       font-size: .85rem
     &:last-child
       border-bottom: 0px
+    .left-column
+      display: inline-block
+      position: relative
+    .date
+      max-width: 50px
+      min-width: 50px
+      width: 50px
+      margin-right: 7px
+      text-align: center
+    .right-line
+      &::after
+        content: ""
+        display: inline-block
+        height: 90%
+        margin: 5% 0
+        background-color: $line-color
+        width: 1px
+        position: absolute
+        right: 0
+        top: 0
