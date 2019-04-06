@@ -3,7 +3,8 @@ import { withRouter } from "react-router-dom";
 import TwoPanels from '../Components/TwoPanels';
 import SlideShowPanel from './SlideShowPanel';
 import SigninPanel from './SigninPanel';
-import UserPanel from './UserPanel';
+import UserFirstPanel from './UserFirstPanel';
+import UserSecondPanel from './UserSecondPanel';
 import Loader from '../Components/Loader';
 import firebase from '../firebase';
 
@@ -26,9 +27,11 @@ class TwoPanelMain extends React.Component {
       isSignin: false,
       authObserver: null,
       initStart: true, // for loading screen
+      sActive: false // for sPanel when user login
     }
     this.getFPanel = this.getFPanel.bind(this);
     this.getSPanel = this.getSPanel.bind(this);
+    this.toggleSPanel = this.toggleSPanel.bind(this);
   }
 
   componentDidMount(){
@@ -58,7 +61,9 @@ class TwoPanelMain extends React.Component {
       return (<LoadingPanel/>)
     }
     else if(this.props.location.pathname === '/') {
-      return (<UserPanel
+      return (<UserFirstPanel
+        toggleSPanel={this.toggleSPanel}
+        sActive={this.state.sActive}
         user={this.state.user}
         firebase={firebase}/>)
     }
@@ -66,15 +71,22 @@ class TwoPanelMain extends React.Component {
   }
 
   getSPanel(){
-    if(this.props.location.pathname === '/') return (<div className='signin-panel panel-content'></div>);
+    if(this.props.location.pathname === '/')
+     return (
+        <UserSecondPanel/>
+      );
     else return (<SigninPanel firebase={firebase}/>)
+  }
+
+  toggleSPanel(){
+    this.setState({ sActive: !this.state.sActive })
   }
 
   render(){
     return(
       <div className="App">
         <TwoPanels
-          className={this.state.user || this.state.initStart ? 'fActive' : ''}
+          className={(this.state.user && !this.state.sActive) || this.state.initStart ? 'fActive' : ''}
           firstPanel={this.getFPanel()}
           secPanel={this.getSPanel()}
         />

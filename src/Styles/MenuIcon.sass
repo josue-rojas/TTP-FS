@@ -1,0 +1,24 @@
+@import './Colors.sass'
+
+.menu-icon
+  position: relative
+  width: 30px
+  height: 22px
+  cursor: pointer
+  .menu-line
+    border-radius: 15px
+    width: 30px
+    height: 5px
+    position: absolute
+    background-image: $rightGradient
+    margin-top: 4px
+    transition: 500ms transform ease
+    &:nth-child(2)
+      margin-top: 13px
+  &.active
+    .menu-line
+      transform: rotate(-225deg)
+      margin-top: 25%
+      &:nth-child(2)
+        transform: rotate(225deg)
+        margin-top: 25%
