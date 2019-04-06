@@ -24,7 +24,8 @@ $animationDelay: 750ms
   // of the non active to make it seem smoother
   .first-panel, .sec-panel
     min-height: 0vh
-    max-height: 100vh
+    // todo: need to fix should be more dynamic cause some panels when mobile might be taller than height
+    max-height: 300vh
     overflow-y: hidden
     transition: $animationDelay min-height ease, $animationDelay width ease, $animationDelay max-height ease, $animationDelay max-width ease
     +medium-devices

@@ -64,7 +64,7 @@ export default class UserTrade extends React.Component {
           hasError={this.state.stockAmount.hasError}
           onChange={(e) => this.onInputChange(e, 'stockAmount')}/>
         <Button
-          text='Send'
+          text='Buy'
           onClick={this.submitForm}/>
         </form>
       </div>

@@ -1,0 +1,40 @@
+{
+  "rules": {
+    "usersData" :{
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid",
+        ".validate": "newData.hasChildren(['money'])",
+        "money": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
+    "transactionHistory": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid",
+        "$transition": {
+          ".validate": "newData.hasChildren(['date', 'symbol', 'purchasePrice', 'amount', 'boughtorsold'])
+                  && newData.child('date').isNumber()
+                  && newData.child('symbol').isString()
+                  && newData.child('purchasePrice').isNumber()
+                  && newData.child('amount').isNumber()
+                  && newData.child('boughtorsold').isBoolean()",
+        }
+      }
+    },
+    "stocksHolding": {
+      "$uid": {
+        ".write": "$uid === auth.uid",
+        ".read": "$uid === auth.uid",
+        "$holdings": {
+          ".validate": "newData.hasChildren(['datePurchase', 'symbol', 'purchasePrice'])
+                  && newData.child('datePurchase').isNumber()
+                  && newData.child('symbol').isString()
+                  && newData.child('purchasePrice').isNumber()"
+        }
+      }
+    }
+  }
+}
