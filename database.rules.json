@@ -14,13 +14,14 @@
       "$uid": {
         ".write": "$uid === auth.uid",
         ".read": "$uid === auth.uid",
-        "$transition": {
-          ".validate": "newData.hasChildren(['date', 'symbol', 'purchasePrice', 'amount', 'boughtorsold'])
+        "$transaction": {
+          ".validate": "$transaction === newData.child('date').val()
+                  && newData.hasChildren(['date', 'symbol', 'purchasePrice', 'amount', 'isBought'])
                   && newData.child('date').isNumber()
                   && newData.child('symbol').isString()
                   && newData.child('purchasePrice').isNumber()
                   && newData.child('amount').isNumber()
-                  && newData.child('boughtorsold').isBoolean()",
+                  && newData.child('isBought').isBoolean()",
         }
       }
     },
@@ -28,11 +29,11 @@
       "$uid": {
         ".write": "$uid === auth.uid",
         ".read": "$uid === auth.uid",
-        "$holdings": {
-          ".validate": "newData.hasChildren(['datePurchase', 'symbol', 'purchasePrice'])
-                  && newData.child('datePurchase').isNumber()
+        "$symbol": {
+          ".validate": "newData.hasChildren(['symbol', 'averagePrice, amount'])
                   && newData.child('symbol').isString()
-                  && newData.child('purchasePrice').isNumber()"
+                  && newData.child('averagePrice').isNumber()
+                  && newData.child('amount').isNumber()"
         }
       }
     }
