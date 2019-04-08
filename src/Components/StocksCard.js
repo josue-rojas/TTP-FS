@@ -52,10 +52,10 @@ function SingleStockWithDate(props){
 
 export default class StocksCard extends React.Component {
   makeDefaultStockRow(stockInfo){
-    let singleStocks = stockInfo.map((e)=>{
+    let singleStocks = stockInfo.map((e, i)=>{
       return(
         <SingleStock
-          key={`single-stock-${e.name}`}
+          key={`single-stock-${e.name}-${i}`}
           stockName={e.name}
           stockAmount={e.amount}
           price={e.price}/>

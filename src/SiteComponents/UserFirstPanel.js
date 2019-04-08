@@ -22,6 +22,48 @@ class UserFirstPanel extends React.Component {
     this.signout = this.signout.bind(this);
   }
 
+  componentWillMount(){
+    if(this.props.user){
+      let data = {
+        symbol: 'SNAP',
+        amount: 90,
+      }
+      this.props.firebase.auth().currentUser.getIdToken( true)
+        .then(function(idToken) {
+          fetch("http://localhost:5000/ttp-fs-20c6a/us-central1/app/user/transactions/buy", {
+            headers: new Headers({
+              'method': 'POST',
+              'Authorization': `Bearer ${idToken}`,
+              'Content-Type': 'application/json',
+            }),
+            'body': JSON.stringify(data),
+            'method': 'POST',
+           })
+          .then( (result) => result.json() )
+          .then( (re) => console.log(JSON.stringify(re)) )
+          .catch( (err) => console.log('error', err) );
+        })
+    }
+  }
+
+
+        //   fetch("http://localhost:5000/ttp-fs-20c6a/us-central1/app/user/holding/", {
+        //     headers: new Headers({
+        //       'Authorization': `Bearer ${idToken}`,
+        //       'Content-Type': 'application/json',
+        //    }),
+        //    // 'body': JSON.stringify(data),
+        //    'method': 'GET',
+        //   })
+        //     .then((result)=>{
+        //       return result.json();
+        //     })
+        //     .then((re)=> console.log(re))
+        //     .catch((err)=> console.log('error', err));
+        // }).catch(function(error) {
+        //   console.log('error', error);
+        // });
+
   componentDidMount(){
     // try to avoid if somehow user is not sign in and access this page
     // redirect to signin
