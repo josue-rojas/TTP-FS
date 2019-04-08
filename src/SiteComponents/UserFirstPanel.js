@@ -3,6 +3,7 @@ import Button from '../Components/Buttons';
 import MenuIcon from '../Components/MenuIcon';
 import StocksCard from '../Components/StocksCard';
 import PlainCard from '../Components/PlainCard';
+import { getUserMoney } from '../Helpers/endpoints';
 import { withRouter } from "react-router-dom";
 import '../Styles/UserFirstPanel.css';
 import Logo from './Logo';
@@ -19,57 +20,29 @@ let stockInfo = [
 class UserFirstPanel extends React.Component {
   constructor(props){
     super(props);
+    this.state = {
+      userMoney: 0,
+    }
     this.signout = this.signout.bind(this);
   }
 
   componentWillMount(){
     if(this.props.user){
-      let data = {
-        symbol: 'SNAP',
-        amount: 90,
-      }
-      this.props.firebase.auth().currentUser.getIdToken( true)
-        .then(function(idToken) {
-          fetch("http://localhost:5000/ttp-fs-20c6a/us-central1/app/user/transactions/buy", {
-            headers: new Headers({
-              'method': 'POST',
-              'Authorization': `Bearer ${idToken}`,
-              'Content-Type': 'application/json',
-            }),
-            'body': JSON.stringify(data),
-            'method': 'POST',
-           })
-          .then( (result) => result.json() )
-          .then( (re) => console.log(JSON.stringify(re)) )
-          .catch( (err) => console.log('error', err) );
+      this.props.firebase.auth().currentUser.getIdToken(true)
+        .then((idToken) => Promise.all([getUserMoney(idToken)]))
+        .then((money)=>{
+          this.setState({ userMoney: money[0].money });
         })
+        .catch((err) => console.log('err', err));
     }
   }
-
-
-        //   fetch("http://localhost:5000/ttp-fs-20c6a/us-central1/app/user/holding/", {
-        //     headers: new Headers({
-        //       'Authorization': `Bearer ${idToken}`,
-        //       'Content-Type': 'application/json',
-        //    }),
-        //    // 'body': JSON.stringify(data),
-        //    'method': 'GET',
-        //   })
-        //     .then((result)=>{
-        //       return result.json();
-        //     })
-        //     .then((re)=> console.log(re))
-        //     .catch((err)=> console.log('error', err));
-        // }).catch(function(error) {
-        //   console.log('error', error);
-        // });
 
   componentDidMount(){
     // try to avoid if somehow user is not sign in and access this page
     // redirect to signin
     if(!this.props.user){
       this.props.history.push('/signin');
-      return;
+      return '';
     }
   }
 
@@ -93,7 +66,7 @@ class UserFirstPanel extends React.Component {
         <div className='content-wrapper'>
           <PlainCard className='user-info'>
             <div>Total</div>
-            <div className='total'>$50000.00</div>
+            <div className='total'>{this.state.userMoney}</div>
           </PlainCard>
           <div className='user-card'>
             <StocksCard

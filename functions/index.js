@@ -28,7 +28,7 @@ app.get('/user/money', (req, res)=>{
   const uid = req.user.uid;
   db.ref(`usersData/${uid}/money`).once('value')
     .then((dataSnapshot)=>{
-      if(!dataSnapshot.val()) {
+      if(!dataSnapshot.val() && dataSnapshot.val() !== 0) {
         return res.status(500).json({status: "error", message: "no data"});
         // should set money if there isnt for some reason
       }
