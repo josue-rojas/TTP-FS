@@ -73,7 +73,9 @@ class TwoPanelMain extends React.Component {
   getSPanel(){
     if(this.props.location.pathname === '/')
      return (
-        <UserSecondPanel/>
+        <UserSecondPanel
+          user={this.state.user}
+          firebase={firebase}/>
       );
     else return (<SigninPanel firebase={firebase}/>)
   }

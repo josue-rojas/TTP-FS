@@ -3,7 +3,7 @@ import Button from '../Components/Buttons';
 import MenuIcon from '../Components/MenuIcon';
 import StocksCard from '../Components/StocksCard';
 import PlainCard from '../Components/PlainCard';
-import { getUserMoney } from '../Helpers/endpoints';
+import { getUserMoney, getStocksHolding } from '../Helpers/endpoints';
 import { withRouter } from "react-router-dom";
 import '../Styles/UserFirstPanel.css';
 import Logo from './Logo';
@@ -22,6 +22,7 @@ class UserFirstPanel extends React.Component {
     super(props);
     this.state = {
       userMoney: 0,
+      userStockInfo: [],
     }
     this.signout = this.signout.bind(this);
   }
@@ -29,9 +30,20 @@ class UserFirstPanel extends React.Component {
   componentWillMount(){
     if(this.props.user){
       this.props.firebase.auth().currentUser.getIdToken(true)
-        .then((idToken) => Promise.all([getUserMoney(idToken)]))
-        .then((money)=>{
-          this.setState({ userMoney: money[0].money });
+        .then((idToken) => Promise.all([getUserMoney(idToken), getStocksHolding(idToken)]))
+        .then((result) => {
+          let stocksHolding = [];
+          for(let e in result[1]){
+            stocksHolding.push({
+              symbol: result[1][e].symbol,
+              amount: result[1][e].amount,
+              price: result[1][e].averagePrice
+            });
+          }
+          this.setState({
+            userMoney: result[0].money,
+            userStockInfo: stocksHolding,
+           });
         })
         .catch((err) => console.log('err', err));
     }
@@ -71,7 +83,7 @@ class UserFirstPanel extends React.Component {
           <div className='user-card'>
             <StocksCard
               withDate={false}
-              stockInfo={stockInfo}/>
+              stockInfo={this.state.userStockInfo}/>
           </div>
         </div>
         <div className='button-wrapper' id='#signout'>
