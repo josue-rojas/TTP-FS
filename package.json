@@ -4,6 +4,7 @@
   "private": true,
   "description": "full stack assesment",
   "main": "index.js",
+  "homepage": "/",
   "scripts": {
     "build-css": "node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/",
     "watch-css": "npm run build-css && node-sass-chokidar --include-path ./src --include-path ./node_modules src/ -o src/ --watch --recursive",
@@ -14,7 +15,7 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy-site": "firebase deploy --only hosting",
     "deploy-database": "firebase deploy --only database"
   },
   "repository": {
@@ -43,6 +44,5 @@
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/josuerojasrojas/TTP-FS/issues"
-  },
-  "homepage": "https://github.com/josuerojasrojas/TTP-FS#readme"
+  }
 }
