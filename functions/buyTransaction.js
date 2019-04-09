@@ -1,8 +1,8 @@
 function buyTransaction(req, res, db, newTransactionHandler){
   const uid = req.user.uid;
-  const symbol = req.body.symbol;
+  const symbol = req.body.symbol.toUpperCase();
   const amount = req.body.amount;
-  const purchasePrice = 10;//use api to get price
+  const purchasePrice = req.body.value;//use api to get price
   db.ref(`usersData/${uid}/money`).once('value')
     .then((dataMoneySnapshot) => {
       // check if have money to buy stuff

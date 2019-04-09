@@ -5,7 +5,7 @@ function sellTransaction(req, res, db, transactionFunction){
   const uid = req.user.uid;
   const symbol = req.body.symbol;
   const amount = req.body.amount;
-  const purchasePrice = 10; //use api to get price
+  const purchasePrice = req.body.value; //use api to get price
   db.ref(`stocksHolding/${uid}/${symbol}`).once('value')
     .then((dataStockSnapshot) => {
       let data = dataStockSnapshot.val();
