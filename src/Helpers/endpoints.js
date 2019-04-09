@@ -5,15 +5,16 @@ const stocksURL = 'https://api.iextrading.com/1.0';
 
 // returns promise with results
 function fetchGET(url, idToken){
-  let headers = new Headers({
-    'Authorization': idToken ? `Bearer ${idToken}` : '',
-    'Content-Type': 'application/json',
-  });
+  let options = {
+    headers: new Headers({
+      'Authorization': idToken ? `Bearer ${idToken}` : '',
+      'Content-Type': 'application/json',
+    }),
+    method: 'GET',
+  };
+  if(!idToken) options = {};
   return new Promise((resolve, reject) => {
-    fetch(url, {
-      headers: headers,
-      method: 'GET',
-    })
+    fetch(url, options)
     .then((result) => resolve(result.json()))
     .catch((err) => reject(err));
   });

@@ -19,6 +19,7 @@ const validateFirebaseIdToken = require('./validate.js');
 const sellTransaction = require('./selltransaction.js');
 const buyTransaction = require('./buyTransaction.js');
 const bodyParser = require('body-parser');
+app.use(cors);
 app.use( bodyParser.json() );
 app.use((req, res, next)=>{
   validateFirebaseIdToken(req, res, next, admin);
