@@ -16,6 +16,22 @@ $line-color: #dcdfe4
     padding: 7px
     width: 100%
     border-bottom: 1px solid $line-color
+    flex-flow: wrap
+    &.isExpandable
+      cursor: pointer
+    .expand-box
+      margin-top: 10px
+      width: 100%
+      max-height: 0px
+      height: 100px
+      transition: max-height 300ms
+      overflow: hidden
+      .button
+        float: left
+        margin: 7px 0 0 3px
+    &.focus
+      .expand-box
+        max-height: 200px
     .left-info
       text-align: left
       font-size: .85rem

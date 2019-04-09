@@ -4,9 +4,8 @@ import { TextInput } from '../Components/Inputs';
 import Loader from '../Components/Loader';
 import { hasInput, isWholeNumber, isNumber } from '../Helpers/InputsCheck';
 import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
-import { buyStock } from '../Helpers/endpoints';
 import '../Styles/UserTrade.css';
-import { getStockPrice } from '../Helpers/endpoints';
+import { getStockPrice, buyStock } from '../Helpers/endpoints';
 
 
 export default class UserTrade extends React.Component {

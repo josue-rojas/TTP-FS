@@ -18,8 +18,9 @@ export class TextInput extends React.Component{
   }
 
   render(){
-    let extraClass = this.state.isFocus ? 'focus' : '';
-    extraClass += this.props.hasError ? ' error' : '';
+    let extraClass = this.state.isFocus ? 'focus ' : '';
+    extraClass += this.props.hasError ? ' error ' : '';
+    extraClass += this.props.className ? this.props.className: '';
     return(
       <div className={`text-input input ${extraClass}`}>
         <label>{this.props.title}</label>
