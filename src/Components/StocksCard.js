@@ -111,7 +111,6 @@ class SingleStockDynamic extends React.Component{
         onClick={(()=> this.setState({ isFocus: true }) )}
         ref={this.setWrapperRef}
         className={`single-stock isExpandable ${this.state.isFocus ? 'focus' : ''}`}>
-        <Loader isLoading={this.state.isLoading}/>
         <div className='left-info'>
           <div className='stock-name'>
             {this.props.stockName}
@@ -223,7 +222,17 @@ export default class StocksCard extends React.Component {
 
   render(){
     return(
-      <PlainCard className='stock-card'>
+      <PlainCard
+        className={`stock-card ${this.props.className || ''} ${this.props.initialLoad ? 'initialLoad' : ''}`}
+        style={{position: 'relative'}}>
+        {this.props.isLoading ?
+          <div className={`blur-background ${this.props.isLoading ? 'isLoading' : ''}`}></div> :
+          ''
+        }
+        {this.props.isLoading ?
+          <Loader inverse={true} isLoading={this.props.isLoading}/> :
+          ''
+        }
         {this.props.withDate ?
           this.makeDateStockRow(this.props.stockInfo || []):
           this.makeDefaultStockRow(this.props.stockInfo || [])

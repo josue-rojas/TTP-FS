@@ -11,6 +11,8 @@ export default class UserHistory extends React.Component {
     super(props);
     this.state = {
       userHistory: [],
+      initialLoad: false,
+      isLoadingHistory: true,
     };
   }
 
@@ -39,7 +41,12 @@ export default class UserHistory extends React.Component {
             });
           }
         }
-        if(this.mounted) this.setState({ userHistory: stockTransaction });
+        if(this.mounted)
+          this.setState({
+            userHistory: stockTransaction,
+            initialLoad: true,
+            isLoadingHistory: false
+           });
       })
     }
   }
@@ -55,6 +62,8 @@ export default class UserHistory extends React.Component {
           <span>History Transactions</span>
         </PlainCard>
         <StocksCard
+          isLoading={this.state.isLoadingHistory}
+          initialLoad={this.state.initialLoad}
           withDate={true}
           stockInfo={this.state.userHistory}/>
       </div>
