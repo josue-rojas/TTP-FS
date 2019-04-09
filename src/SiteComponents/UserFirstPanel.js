@@ -74,6 +74,8 @@ class UserFirstPanel extends React.Component {
           </PlainCard>
           <div className='user-card'>
             <StocksCard
+              firebase={this.props.firebase}
+              user={this.props.user}
               withDate={false}
               stockInfo={this.state.userStockInfo}/>
           </div>

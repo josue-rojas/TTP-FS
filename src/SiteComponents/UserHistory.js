@@ -15,6 +15,9 @@ export default class UserHistory extends React.Component {
   }
 
   componentDidMount(){
+    // anti pattern for unmounted component handling
+    // https://stackoverflow.com/a/49906662/6332768
+    this.mounted = true;
     if(this.props.user){
       this.props.firebase.auth().currentUser.getIdToken(true)
       .then((idToken) => Promise.all([getTransactions(idToken)]))
@@ -34,9 +37,13 @@ export default class UserHistory extends React.Component {
             }
           });
         }
-        this.setState({ userHistory: stockTransaction });
+        if(this.mounted) this.setState({ userHistory: stockTransaction });
       })
     }
+  }
+
+  componentWillUnmount(){
+    this.mounted = false;
   }
 
   render(){
