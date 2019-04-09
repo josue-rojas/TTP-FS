@@ -16,6 +16,8 @@ class UserFirstPanel extends React.Component {
       userMoney: 0,
       investmentMoney: 0,
       userStockInfo: [],
+      initialLoad: false,
+      isLoadingHolding: true,
     }
     this.signout = this.signout.bind(this);
   }
@@ -41,6 +43,8 @@ class UserFirstPanel extends React.Component {
             userMoney: result[0].money,
             investmentMoney: investmentMoney,
             userStockInfo: stocksHolding,
+            initialLoad: true,
+            isLoadingHolding: false
            });
         })
         .catch((err) => console.log('err', err));
@@ -90,6 +94,8 @@ class UserFirstPanel extends React.Component {
           </PlainCard>
           <div className='user-card'>
             <StocksCard
+              isLoading={this.state.isLoadingHolding}
+              initialLoad={this.state.initialLoad}
               firebase={this.props.firebase}
               user={this.props.user}
               withDate={false}
