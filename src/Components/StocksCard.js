@@ -192,6 +192,12 @@ export default class StocksCard extends React.Component {
           user={this.props.user}/>
       )
     })
+    if(singleStocks.length === 0){
+      return (
+        <div style={{textAlign: 'center', padding: '7px'}}>
+          Not holding anything. Buy some to see your account grow!
+        </div>)
+    }
     return singleStocks;
   }
 
@@ -206,6 +212,12 @@ export default class StocksCard extends React.Component {
           price={e.price}/>
       )
     })
+    if(singleStocks.length === 0){
+      return (
+        <div style={{textAlign: 'center', padding: '7px', whiteSpace: 'normal'}}>
+          Not transactions found. Buy some to see your account grow!
+        </div>)
+    }
     return singleStocks;
   }
 
