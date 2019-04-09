@@ -2,8 +2,9 @@ import React from 'react';
 import Button from '../Components/Buttons';
 import { TextInput } from '../Components/Inputs';
 import Loader from '../Components/Loader';
-import { hasInput } from '../Helpers/InputsCheck';
+import { hasInput, isWholeNumber, isNumber } from '../Helpers/InputsCheck';
 import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
+import { buyStock } from '../Helpers/endpoints';
 import '../Styles/UserTrade.css';
 import { getStockPrice } from '../Helpers/endpoints';
 
@@ -28,8 +29,8 @@ export default class UserTrade extends React.Component {
     }
     this.checkInput = {
       stockName: hasInput,
-      stockAmount: hasInput,
-      stockValue: hasInput,
+      stockAmount: isWholeNumber,
+      stockValue: isNumber,
     }
     this.onInputChange = this.onInputChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
@@ -72,8 +73,23 @@ export default class UserTrade extends React.Component {
       this.setState(valuesChange);
       return false;
     }
-    return console.log('ummm not implemented...')
     this.setState({ isLoading: true });
+    let body = JSON.stringify({
+      symbol: this.state.stockName.val.toUpperCase(),
+      amount: parseInt(this.state.stockAmount.val, 10),
+      value: parseFloat(this.state.stockValue.val, 10),
+    })
+    if(this.props.user){
+      this.props.firebase.auth().currentUser.getIdToken(true)
+        .then((idToken) => Promise.all([buyStock(idToken, body)]))
+        .then((result) => {
+          if(result[0].status === 'ok'){
+            this.setState({ isLoading: false });
+            // should have a callback to notify parent components
+          }
+        })
+        .catch((err) => console.log(err));
+    }
   }
 
   render(){

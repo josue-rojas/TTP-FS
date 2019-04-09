@@ -32,7 +32,9 @@ export default class UserSecondPanel extends React.Component {
             <UserHistory
               user={this.props.user}
               firebase={this.props.firebase}/> :
-            <UserTrade/>
+            <UserTrade
+              user={this.props.user}
+              firebase={this.props.firebase}/>
           }
         </div>
       </div>

@@ -11,3 +11,13 @@ export function emailCheck(val){
 export function passwordCheck(val){
   return true;
 }
+
+export function isWholeNumber(val){
+  if(isNaN(val)) return false;
+  let num = parseFloat(val);
+  return num % 1  === 0 && num > 0;
+}
+
+export function isNumber(val){
+  return !isNaN(val)
+}
