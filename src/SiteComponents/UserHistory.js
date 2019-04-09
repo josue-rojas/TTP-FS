@@ -23,19 +23,21 @@ export default class UserHistory extends React.Component {
       .then((idToken) => Promise.all([getTransactions(idToken)]))
       .then( (result) => {
         let stockTransaction = [];
-        for(let e in result[0]){
-          let date = new Date(result[0][e].datePurchase);
-          stockTransaction.push({
-            symbol: result[0][e].symbol,
-            price: result[0][e].purchasePrice,
-            amount: (result[0][e].amount) * (result[0][e].isBought ? 1 : -1),
-            isBought: result[0][e].isBought,
-            date: {
-              year: date.getFullYear(),
-              month: MONTHS[date.getMonth()],
-              day: date.getDate()
-            }
-          });
+        if(!result[0].status){
+          for(let e in result[0]){
+            let date = new Date(result[0][e].datePurchase);
+            stockTransaction.push({
+              symbol: result[0][e].symbol,
+              price: result[0][e].purchasePrice,
+              amount: (result[0][e].amount) * (result[0][e].isBought ? 1 : -1),
+              isBought: result[0][e].isBought,
+              date: {
+                year: date.getFullYear(),
+                month: MONTHS[date.getMonth()],
+                day: date.getDate()
+              }
+            });
+          }
         }
         if(this.mounted) this.setState({ userHistory: stockTransaction });
       })
@@ -49,7 +51,7 @@ export default class UserHistory extends React.Component {
   render(){
     return(
       <div className='user-history'>
-        <PlainCard className='user-history-title-card'>
+        <PlainCard className='user-history-title-card bold'>
           <span>History Transactions</span>
         </PlainCard>
         <StocksCard

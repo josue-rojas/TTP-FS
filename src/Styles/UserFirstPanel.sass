@@ -18,10 +18,16 @@
   .icon
     float: left
   .user-info
-    display: flex
-    justify-content: space-between
     font-size: 1.2rem
-    padding: 10px 7px
+    padding: 10px 0px
+    .plain-card-row
+      display: flex
+      justify-content: space-between
+      padding: 7px
+      width: 100%
+      border-bottom: 1px solid $line-color
+      &:last-child
+        border-bottom: 0px
   .stock-card
     margin-top: 15px
   a
@@ -56,6 +62,3 @@
       max-width: 600px
   .button-wrapper
     margin: 15px 0 10px
-
-.bold
-  font-weight: 600

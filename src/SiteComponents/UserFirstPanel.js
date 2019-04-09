@@ -14,6 +14,7 @@ class UserFirstPanel extends React.Component {
     super(props);
     this.state = {
       userMoney: 0,
+      investmentMoney: 0,
       userStockInfo: [],
     }
     this.signout = this.signout.bind(this);
@@ -25,15 +26,20 @@ class UserFirstPanel extends React.Component {
         .then((idToken) => Promise.all([getUserMoney(idToken), getStocksHolding(idToken)]))
         .then((result) => {
           let stocksHolding = [];
-          for(let e in result[1]){
-            stocksHolding.push({
-              symbol: result[1][e].symbol,
-              amount: result[1][e].amount,
-              price: result[1][e].averagePrice
-            });
+          let investmentMoney = 0;
+          if(!result[1].status){
+            for(let e in result[1]){
+              investmentMoney += result[1][e].amount * result[1][e].averagePrice
+              stocksHolding.push({
+                symbol: result[1][e].symbol,
+                amount: result[1][e].amount,
+                price: result[1][e].averagePrice
+              });
+            }
           }
           this.setState({
             userMoney: result[0].money,
+            investmentMoney: investmentMoney,
             userStockInfo: stocksHolding,
            });
         })
@@ -69,8 +75,18 @@ class UserFirstPanel extends React.Component {
         </div>
         <div className='content-wrapper'>
           <PlainCard className='user-info'>
-            <div>Total</div>
-            <div className='total'>{this.state.userMoney}</div>
+            <div className='plain-card-row'>
+              <div>Cash</div>
+              <div className='total'>{this.state.userMoney}</div>
+            </div>
+            <div className='plain-card-row'>
+              <div>Investments</div>
+              <div className='total'>{this.state.investmentMoney}</div>
+            </div>
+            <div className='plain-card-row bold'>
+              <div>Total</div>
+              <div className='total'>{this.state.userMoney + this.state.investmentMoney}</div>
+            </div>
           </PlainCard>
           <div className='user-card'>
             <StocksCard
