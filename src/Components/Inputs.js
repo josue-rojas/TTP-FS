@@ -24,7 +24,9 @@ export class TextInput extends React.Component{
       <div className={`text-input input ${extraClass}`}>
         <label>{this.props.title}</label>
         <input
+          disabled={this.props.disabled ? 'disabled' : ''}
           type={this.props.type || 'text'}
+          autoComplete={this.props.autocomplete ? 'on' : "off"}
           onFocus={()=>this.toggleFocus(true)}
           onBlur={()=>this.toggleFocus(false)}
           placeholder={this.props.placeholder}
@@ -46,6 +48,8 @@ export class TextInputWithTooltip extends TextInput{
         <Tooltip message={this.props.tooltipMessage}/>
         <label>{this.props.title}</label>
         <input
+          disabled={this.props.disabled ? 'disabled' : ''}
+          autoComplete={this.props.autocomplete ? 'on' : "off"}
           type={this.props.type || 'text'}
           onFocus={()=>this.toggleFocus(true)}
           onBlur={()=>this.toggleFocus(false)}

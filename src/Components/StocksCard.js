@@ -28,7 +28,7 @@ function SingleStockWithDate(props){
       <div className='left-info'>
         <div className='left-column right-line date'>
           <div>
-            {props.date.month}
+            {props.date.month} {props.date.day}
           </div>
           <div>
             {props.date.year}
@@ -55,8 +55,8 @@ export default class StocksCard extends React.Component {
     let singleStocks = stockInfo.map((e, i)=>{
       return(
         <SingleStock
-          key={`single-stock-${e.name}-${i}`}
-          stockName={e.name}
+          key={`single-stock-${e.symbol}-${i}`}
+          stockName={e.symbol}
           stockAmount={e.amount}
           price={e.price}/>
       )
@@ -65,12 +65,12 @@ export default class StocksCard extends React.Component {
   }
 
   makeDateStockRow(stockInfo){
-    let singleStocks = stockInfo.map((e)=>{
+    let singleStocks = stockInfo.map((e, i)=>{
       return(
         <SingleStockWithDate
           date={e.date}
-          key={`single-stock-${e.name}`}
-          stockName={e.name}
+          key={`single-stock-${e.symbol}-${i}`}
+          stockName={e.symbol}
           stockAmount={e.amount}
           price={e.price}/>
       )

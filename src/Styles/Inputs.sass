@@ -32,6 +32,9 @@
     border: 0px
     border-bottom: 1px solid $shadow_text
     color: white
+    &:disabled
+      color: $shadow_text
+      cursor: not-allowed
     +medium-devices
       font-size: .9rem
     &::placeholder

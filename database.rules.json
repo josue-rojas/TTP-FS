@@ -16,8 +16,8 @@
         ".read": "$uid === auth.uid",
         "$transaction": {
           ".validate": "$transaction === newData.child('date').val()
-                  && newData.hasChildren(['date', 'symbol', 'purchasePrice', 'amount', 'isBought'])
-                  && newData.child('date').isNumber()
+                  && newData.hasChildren(['datePurchase', 'symbol', 'purchasePrice', 'amount', 'isBought'])
+                  && newData.child('datePurchase').isNumber()
                   && newData.child('symbol').isString()
                   && newData.child('purchasePrice').isNumber()
                   && newData.child('amount').isNumber()

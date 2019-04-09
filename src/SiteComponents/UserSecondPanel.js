@@ -29,8 +29,12 @@ export default class UserSecondPanel extends React.Component {
         </div>
         <div className='content-wrapper'>
           {this.state.historyPanel ?
-            <UserHistory /> :
-            <UserTrade/>
+            <UserHistory
+              user={this.props.user}
+              firebase={this.props.firebase}/> :
+            <UserTrade
+              user={this.props.user}
+              firebase={this.props.firebase}/>
           }
         </div>
       </div>
