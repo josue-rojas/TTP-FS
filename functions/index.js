@@ -30,7 +30,7 @@ app.get('/user/money', (req, res)=>{
   db.ref(`usersData/${uid}/money`).once('value')
     .then((dataSnapshot)=>{
       if(!dataSnapshot.val() && dataSnapshot.val() !== 0) {
-        return res.status(500).json({status: "error", message: "no data"});
+        return res.status(400).json({status: "error", message: "no data found"});
         // should set money if there isnt for some reason
       }
       return res.send({money: dataSnapshot.val()});
@@ -43,7 +43,7 @@ app.get('/user/transactions', (req, res)=>{
   db.ref(`transactionHistory/${uid}`).once('value')
     .then((dataSnapshot)=>{
       if(!dataSnapshot.val()) {
-        return res.status(500).json({status: "error", message: "no data"});
+        return res.status(400).json({status: "error", message: "no data found"});
       }
       return res.send(dataSnapshot.toJSON());
     })
@@ -55,7 +55,7 @@ app.get('/user/holding', (req, res)=>{
   db.ref(`stocksHolding/${uid}`).once('value')
     .then((dataSnapshot)=>{
       if(!dataSnapshot.val()){
-        return res.status(500).json({status: "error", message: "no data"});
+        return res.status(400).json({status: "error", message: "no data found"});
       }
       return res.send(dataSnapshot.toJSON());
     })

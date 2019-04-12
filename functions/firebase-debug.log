@@ -1,0 +1,70 @@
+[debug] [2019-04-12T18:32:18.678Z] ----------------------------------------------------------------------
+[debug] [2019-04-12T18:32:18.682Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve --only functions
+[debug] [2019-04-12T18:32:18.683Z] CLI Version:   6.5.2
+[debug] [2019-04-12T18:32:18.683Z] Platform:      darwin
+[debug] [2019-04-12T18:32:18.683Z] Node Version:  v10.15.1
+[debug] [2019-04-12T18:32:18.684Z] Time:          Fri Apr 12 2019 14:32:18 GMT-0400 (Eastern Daylight Time)
+[debug] [2019-04-12T18:32:18.684Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-04-12T18:32:18.719Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-04-12T18:32:18.720Z] > authorizing via signed-in user
+[debug] [2019-04-12T18:32:18.720Z] [iam] checking project ttp-fs-20c6a for permissions ["firebase.projects.get"]
+[debug] [2019-04-12T18:32:18.722Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2019-04-12T18:32:18.723Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2019-04-12T18:32:18.959Z] <<< HTTP RESPONSE 200
+[debug] [2019-04-12T18:32:18.983Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/ttp-fs-20c6a:testIamPermissions  
+
+[debug] [2019-04-12T18:32:19.350Z] <<< HTTP RESPONSE 200
+[debug] [2019-04-12T18:32:19.352Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/ttp-fs-20c6a  
+ 
+[debug] [2019-04-12T18:32:19.657Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/josuerojas/Github/TTP-FS'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2019-04-12T18:32:22.600Z] Fetching environment
+[debug] [2019-04-12T18:32:22.723Z] Error: EACCES: permission denied, open '/Users/josuerojas/.config/gcloud/application_default_credentials.json'
+    at Object.openSync (fs.js:439:3)
+    at Object.writeFileSync (fs.js:1190:35)
+    at module.exports (/usr/local/lib/node_modules/firebase-tools/lib/ensureDefaultCredentials.js:28:8)
+    at FunctionsEmulator.start (/usr/local/lib/node_modules/firebase-tools/lib/functionsEmulator.js:106:5)
+    at Object.start (/usr/local/lib/node_modules/firebase-tools/lib/serve/functions.js:7:33)
+    at /usr/local/lib/node_modules/firebase-tools/lib/serve/index.js:15:23
+    at arrayMap (/usr/local/lib/node_modules/firebase-tools/node_modules/lodash/lodash.js:639:23)
+    at Function.map (/usr/local/lib/node_modules/firebase-tools/node_modules/lodash/lodash.js:9556:14)
+    at _serve (/usr/local/lib/node_modules/firebase-tools/lib/serve/index.js:13:26)
+    at Command.module.exports.Command.description.option.option.option.option.before.action [as _action] (/usr/local/lib/node_modules/firebase-tools/lib/commands/serve.js:55:12)
+[error] 
+[error] Error: An unexpected error has occurred.
+[debug] [2019-04-12T18:32:58.395Z] ----------------------------------------------------------------------
+[debug] [2019-04-12T18:32:58.400Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve --only functions
+[debug] [2019-04-12T18:32:58.401Z] CLI Version:   6.5.2
+[debug] [2019-04-12T18:32:58.401Z] Platform:      darwin
+[debug] [2019-04-12T18:32:58.401Z] Node Version:  v10.15.1
+[debug] [2019-04-12T18:32:58.403Z] Time:          Fri Apr 12 2019 14:32:58 GMT-0400 (Eastern Daylight Time)
+[debug] [2019-04-12T18:32:58.404Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2019-04-12T18:32:58.443Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2019-04-12T18:32:58.444Z] > authorizing via signed-in user
+[debug] [2019-04-12T18:32:58.444Z] [iam] checking project ttp-fs-20c6a for permissions ["firebase.projects.get"]
+[debug] [2019-04-12T18:32:58.450Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/ttp-fs-20c6a:testIamPermissions  
+
+[debug] [2019-04-12T18:32:58.783Z] <<< HTTP RESPONSE 200
+[debug] [2019-04-12T18:32:58.789Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/ttp-fs-20c6a  
+ 
+[debug] [2019-04-12T18:32:59.028Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/josuerojas/Github/TTP-FS'...
+[info] 
+[info] i  functions: Preparing to emulate functions.
+[debug] [2019-04-12T18:33:01.567Z] Fetching environment
+[debug] [2019-04-12T18:33:01.574Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/56718974801:getServerAppConfig  
+ 
+[debug] [2019-04-12T18:33:01.812Z] <<< HTTP RESPONSE 200
+[debug] [2019-04-12T18:33:01.812Z] Starting @google-cloud/functions-emulator
+[debug] [2019-04-12T18:33:05.435Z] Parsing function triggers
+[info] ✔  functions: app: http://localhost:5000/ttp-fs-20c6a/us-central1/app
+[info] Shutting down...
+[info] Shutting down...
+[info] Shutting down...
