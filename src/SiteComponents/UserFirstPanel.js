@@ -165,11 +165,11 @@ class UserFirstPanel extends React.Component {
             </div>
             <div className='plain-card-row'>
               <div>Investments</div>
-              <div className='total'>{this.state.investmentMoney}</div>
+              <div className='total'>{this.state.investmentMoney.toFixed(2)}</div>
             </div>
             <div className='plain-card-row bold'>
               <div>Total</div>
-              <div className={`total ${textColor}`}>{this.state.userMoney + this.state.investmentMoney}</div>
+              <div className={`total ${textColor}`}>{(this.state.userMoney + this.state.investmentMoney).toFixed(2)}</div>
             </div>
           </PlainCard>
           <div className='user-card'>
