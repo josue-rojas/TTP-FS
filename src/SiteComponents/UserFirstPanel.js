@@ -28,6 +28,7 @@ class UserFirstPanel extends React.Component {
     }
     this.updateStockPrice = this.updateStockPrice.bind(this);
     this.signout = this.signout.bind(this);
+    this.refreshCallback = this.refreshCallback.bind(this);
   }
 
   componentWillMount(){
@@ -143,6 +144,34 @@ class UserFirstPanel extends React.Component {
       .catch((error)=> console.log('error signout', error))
   }
 
+  refreshCallback(symbol, amount, value){
+    // should update stock info here
+    // add/delete subscription
+    let userStockInfo = [ ...this.state.userStockInfo ];
+    let indexStockLocation = { ...this.state.indexStockLocation };
+    let symbolStockLocation = indexStockLocation[symbol];
+    let currentAmount = userStockInfo[symbolStockLocation].amount;
+    let newAmount = currentAmount - amount;
+    let cashEarn = amount * value;
+    // if sold all stock remove subscription, indexlocation, and userStockInfo(for the table)
+    // and finally add to the cash
+    if(newAmount === 0){
+      userStockInfo.splice(symbolStockLocation, 1);
+      delete indexStockLocation[symbol];
+      removeSubscriptionLast(this.state.socket, [symbol]);
+    }
+    else {
+      userStockInfo[symbolStockLocation].amount = newAmount;
+    }
+    this.setState({
+      userStockInfo: userStockInfo,
+      indexStockLocation: indexStockLocation,
+      investmentMoney: this.state.investmentMoney - cashEarn,
+      userMoney: this.state.userMoney + cashEarn,
+    })
+    this.props.refreshCallback();
+  }
+
   render() {
     if(!this.props.user) return '...'
     let textColor = '';
@@ -174,6 +203,7 @@ class UserFirstPanel extends React.Component {
           </PlainCard>
           <div className='user-card'>
             <StocksCard
+              refreshCallback={this.refreshCallback}
               isLoading={this.state.isLoadingHolding}
               initialLoad={this.state.initialLoad}
               firebase={this.props.firebase}

@@ -77,18 +77,29 @@ class SingleStockDynamic extends React.Component{
       this.setState(valuesChange);
       return false;
     }
+    let amount = parseInt(this.state.amount.val, 10);
+    let symbol = this.props.stockName.toUpperCase();
+    let value = parseFloat(this.props.price, 10);
     this.setState({ isLoading: true });
     let body = JSON.stringify({
-      symbol: this.props.stockName.toUpperCase(),
-      amount: parseInt(this.state.amount.val, 10),
-      value: parseFloat(this.props.price, 10),
+      symbol: symbol,
+      amount: amount,
+      value: value,
     })
     if(this.props.user){
       this.props.firebase.auth().currentUser.getIdToken(true)
         .then((idToken) => Promise.all([sellStock(idToken, body)]))
         .then((result) => {
           if(result[0].status === 'ok'){
-            this.setState({ isLoading: false });
+            this.setState({
+              amount: {
+                val: '',
+                hasError: false,
+              },
+              isLoading: false,
+              isFocus: false
+            });
+            this.props.refreshCallback(symbol, amount, value);
             // should have a callback to notify parent components
           }
           else{
@@ -191,6 +202,7 @@ export default class StocksCard extends React.Component {
       let e = order === 'desc' ? stockInfo[stockInfo.length - 1 - i] : el;
       return(
         <SingleStockDynamic
+          refreshCallback={this.props.refreshCallback}
           key={`single-stock-${e.symbol}-${i}`}
           stockName={e.symbol}
           stockAmount={e.amount}

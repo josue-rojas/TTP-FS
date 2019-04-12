@@ -27,11 +27,15 @@ class TwoPanelMain extends React.Component {
       isSignin: false,
       authObserver: null,
       initStart: true, // for loading screen
-      sActive: false // for sPanel when user login
+      sActive: false, // for sPanel when user login
+      refreshStateKeyFirstPanel: Date.now(),
+      refreshStateKeyHistoryPanel: Date.now(),
     }
     this.getFPanel = this.getFPanel.bind(this);
     this.getSPanel = this.getSPanel.bind(this);
     this.toggleSPanel = this.toggleSPanel.bind(this);
+    this.refreshHistory = this.refreshHistory.bind(this);
+    this.refreshUserPanel = this.refreshUserPanel.bind(this);
   }
 
   componentDidMount(){
@@ -62,6 +66,8 @@ class TwoPanelMain extends React.Component {
     }
     else if(this.props.location.pathname === '/') {
       return (<UserFirstPanel
+        refreshCallback={this.refreshHistory}
+        key={this.state.refreshStateKeyFirstPanel}
         toggleSPanel={this.toggleSPanel}
         sActive={this.state.sActive}
         user={this.state.user}
@@ -74,6 +80,8 @@ class TwoPanelMain extends React.Component {
     if(this.props.location.pathname === '/')
      return (
         <UserSecondPanel
+          refreshCallback={this.refreshUserPanel}
+          historyRefreshKey={this.state.refreshStateKeyHistoryPanel}
           user={this.state.user}
           firebase={firebase}/>
       );
@@ -82,6 +90,14 @@ class TwoPanelMain extends React.Component {
 
   toggleSPanel(){
     this.setState({ sActive: !this.state.sActive })
+  }
+
+  refreshHistory(){
+    this.setState({ refreshStateKeyHistoryPanel: Date.now() });
+  }
+
+  refreshUserPanel(){
+    this.setState({ refreshStateKeyFirstPanel: Date.now() });
   }
 
   render(){

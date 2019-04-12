@@ -65,6 +65,24 @@ export default class UserTrade extends React.Component {
     });
   }
 
+  // just return an object of input values when reser (default values)
+  resetForm(){
+    return {
+      stockName: {
+        val: '',
+        hasError: false,
+      },
+      stockAmount: {
+        val: '',
+        hasError: false,
+      },
+      stockValue: {
+        val: '',
+        hasError: false
+      }
+    }
+  }
+
   submitForm(){
     let valuesChange = checkAllInputs(this.checkInput, this.state);
     if(valuesChange){
@@ -82,7 +100,10 @@ export default class UserTrade extends React.Component {
         .then((idToken) => Promise.all([buyStock(idToken, body)]))
         .then((result) => {
           if(result[0].status === 'ok'){
-            this.setState({ isLoading: false });
+            let inputState = this.resetForm();
+            inputState.isLoading = false;
+            this.setState( inputState );
+            this.props.refreshCallback();
             // should have a callback to notify parent components
           }
         })

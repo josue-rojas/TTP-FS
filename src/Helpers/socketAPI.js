@@ -41,6 +41,7 @@ export function socketRemoveListeners(socket, listeners){
       socket.removeListener(listeners[i],
         () => console.log(`remove ${listeners[i]}`));
     }
+    socket.close();
   }
   return false;
 }
