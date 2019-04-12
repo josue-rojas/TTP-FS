@@ -1,7 +1,6 @@
 import React from 'react';
 import { TextInputWithTooltip } from '../Components/Inputs';
-import Button from '../Components/Buttons';
-import Loader from '../Components/Loader';
+import { ButtonwLoader } from '../Components/Buttons';
 import { Link } from "react-router-dom";
 import { hasInput, emailCheck } from '../Helpers/InputsCheck';
 import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
@@ -95,8 +94,7 @@ export default class SigninForm extends React.Component {
   render(){
     return (
       <div style={{position: 'relative'}}>
-        <Loader isLoading={this.state.isLoading}/>
-        <form className={this.state.isLoading ? 'inactive': ''}>
+        <form>
           <TextInputWithTooltip
             tooltipMessage={this.state.email.tooltip}
             type='email'
@@ -113,7 +111,9 @@ export default class SigninForm extends React.Component {
             val={this.state.password.val}
             hasError={this.state.password.hasError}
             onChange={(e) => this.onInputChange(e, 'password')}/>
-          <Button
+          <ButtonwLoader
+            inverse={true}
+            isLoading={this.state.isLoading}
             text='Sign In'
             onClick={this.signin}/>
           <div className='extra-link'>

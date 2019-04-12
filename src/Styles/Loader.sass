@@ -5,6 +5,7 @@ $inverseFirst: rgb(54, 74, 100)
 $secColor: rgba(255, 255, 255, .1)
 $inverseSec: rgba(255, 255, 255, .7)
 $loaderSize: 7px
+$loaderSmSize: 5px
 
 .loader-wrapper
   position: absolute
@@ -33,6 +34,12 @@ $loaderSize: 7px
       border-right-color: $inverseFirst
       border-bottom-color: $inverseSec
       border-top-color: $inverseSec
+  &.sm
+    .loader
+      width: 20px
+      height: 20px
+      border-radius: 100%
+      border-width: $loaderSmSize
 
 
 +keyframes(spin)

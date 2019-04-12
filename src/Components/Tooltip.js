@@ -37,10 +37,10 @@ export default class Tooltip extends React.Component {
 
   hideTooltip(){
     let timerVar = setTimeout(
-      ()=> {
+      () => {
         this.setState({ hide: true });
         let expireTimer = setTimeout(
-          ()=> this.setState({ isExpire: true, message: '' }),
+          () => this.setState({ isExpire: true, message: '' }),
           200);
         this.timer.push(expireTimer);
       },

@@ -161,7 +161,7 @@ class UserFirstPanel extends React.Component {
           <PlainCard className='user-info'>
             <div className='plain-card-row'>
               <div>Cash</div>
-              <div className='total'>{this.state.userMoney}</div>
+              <div className='total'>{this.state.userMoney.toFixed(2)}</div>
             </div>
             <div className='plain-card-row'>
               <div>Investments</div>

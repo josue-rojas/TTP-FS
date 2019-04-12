@@ -1,7 +1,6 @@
 import React from 'react';
-import Button from '../Components/Buttons';
+import { ButtonwLoader } from '../Components/Buttons';
 import { CheckBox, TextInputWithTooltip } from '../Components/Inputs';
-import Loader from '../Components/Loader';
 import { Link } from "react-router-dom";
 import { hasInput, emailCheck } from '../Helpers/InputsCheck';
 import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
@@ -133,8 +132,7 @@ export default class SignupForm extends React.Component {
   render(){
     return(
       <div style={{position: 'relative'}}>
-        <Loader isLoading={this.state.isLoading}/>
-        <form className={this.state.isLoading ? 'inactive': ''}>
+        <form>
           <TextInputWithTooltip
             tooltipMessage={this.state.name.tooltip}
             title='FULL NAME'
@@ -163,7 +161,9 @@ export default class SignupForm extends React.Component {
             isChecked={this.state.checkbox.val}
             onClick={this.checkBoxChange}
             text={<div className='checkbox-text'><span>I agree all statements in <a href='/'>terms and services</a></span></div>}/>
-          <Button
+          <ButtonwLoader
+            inverse={true}
+            isLoading={this.state.isLoading}
             text='Sign Up'
             onClick={this.submitForm}/>
           <div className='extra-link'>

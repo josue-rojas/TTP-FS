@@ -1,7 +1,6 @@
 import React from 'react';
-import Button from '../Components/Buttons';
 import { TextInput } from '../Components/Inputs';
-import Loader from '../Components/Loader';
+import { ButtonwLoader } from '../Components/Buttons';
 import { hasInput, isWholeNumber, isNumber } from '../Helpers/InputsCheck';
 import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
 import '../Styles/UserTrade.css';
@@ -94,8 +93,7 @@ export default class UserTrade extends React.Component {
   render(){
     return(
       <div style={{position: 'relative'}} className='trade-form'>
-        <Loader isLoading={this.state.isLoading}/>
-        <form className={this.state.isLoading ? 'inactive': ''}>
+        <form>
         <TextInput
           title='STOCK NAME'
           placeholder='Name of stock'
@@ -118,7 +116,9 @@ export default class UserTrade extends React.Component {
           value={this.state.stockAmount.val}
           hasError={this.state.stockAmount.hasError}
           onChange={(e) => this.onInputChange(e, 'stockAmount')}/>
-        <Button
+        <ButtonwLoader
+          inverse={true}
+          isLoading={this.state.isLoading}
           text='Buy'
           onClick={this.submitForm}/>
         </form>

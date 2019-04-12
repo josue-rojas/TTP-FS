@@ -10,6 +10,12 @@
   user-select: none
   text-align: center
   font-size: .9rem
+  .text-wrapper
+    transition: filter 200ms
+  &.loading
+    cursor: not-allowed
+    .text-wrapper
+      filter: blur(3px)
 
 .rg
   background-image: $leftGradient
