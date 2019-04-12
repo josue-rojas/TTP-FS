@@ -70,7 +70,9 @@ export function getStockPrice(symbol){
 }
 
 // batch request
-// https://api.iextrading.com/1.0/stock/market/batch?symbols=${symbols}&types=price
-export function getStocksList(symbols){
-  return fetchGET(`${stocksURL}/stock/market/batch?symbols=${symbols.join(',').toUpperCase()}&types=price`);
+// https://api.iextrading.com/1.0/stock/market/batch?symbols=${symbols}&types=price or custom types
+export function getStocksBatch({symbols, types}){
+  let symbolArr = symbols || [];
+  let typesArr = types || [];
+  return fetchGET(`${stocksURL}/stock/market/batch?symbols=${symbolArr.join(',').toUpperCase()}&types=${typesArr.join(',') || 'price'}`);
 }

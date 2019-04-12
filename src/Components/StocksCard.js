@@ -91,7 +91,6 @@ class SingleStockDynamic extends React.Component{
             // should have a callback to notify parent components
           }
           else{
-            console.log(result);
             this.setState({ isLoading: false });
             // handle error
           }
@@ -105,6 +104,9 @@ class SingleStockDynamic extends React.Component{
   }
 
   render(){
+    let textColor = '';
+    if(this.props.openPrice > this.props.price) textColor = 'red-text';
+    else if(this.props.openPrice < this.props.price) textColor = 'green-text';
     return(
       <div
         style={{position: 'relative'}}
@@ -119,7 +121,7 @@ class SingleStockDynamic extends React.Component{
             {this.props.stockAmount} Shares
           </div>
         </div>
-        <div className='right-info'>
+        <div className={`right-info ${textColor}`}>
           <span>{this.props.price}</span>
         </div>
         <div className='expand-box'>
@@ -187,6 +189,7 @@ export default class StocksCard extends React.Component {
           stockName={e.symbol}
           stockAmount={e.amount}
           price={e.price}
+          openPrice={e.openPrice}
           firebase={this.props.firebase}
           user={this.props.user}/>
       )

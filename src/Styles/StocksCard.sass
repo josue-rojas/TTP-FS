@@ -38,17 +38,20 @@
     &.isExpandable
       cursor: pointer
     .expand-box
-      margin-top: 10px
+      margin-top: 0px
       width: 100%
       max-height: 0px
-      transition: max-height 300ms ease
+      transition: max-height 300ms ease, margin-top 300ms ease
       overflow: hidden
       .button
         float: left
         margin: 7px 0 10px 3px
     &.focus
       .expand-box
+        margin-top: 10px
         max-height: 150px
+    .right-info
+      transition: 200ms color
     .left-info
       text-align: left
       font-size: .85rem
