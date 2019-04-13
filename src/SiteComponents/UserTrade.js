@@ -1,11 +1,11 @@
 import React from 'react';
-import { TextInput } from '../Components/Inputs';
+import { TextInputWithTooltip } from '../Components/Inputs';
 import { ButtonwLoader } from '../Components/Buttons';
 import { hasInput, isWholeNumber, isNumber } from '../Helpers/InputsCheck';
 import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
 import '../Styles/UserTrade.css';
 import { getStockPrice, buyStock } from '../Helpers/endpoints';
-
+import { clearAllTimeOut }  from '../Helpers/timerFunctions';
 
 export default class UserTrade extends React.Component {
   constructor(props){
@@ -14,14 +14,17 @@ export default class UserTrade extends React.Component {
       stockName: {
         val: '',
         hasError: false,
+        tooltop: '',
       },
       stockAmount: {
         val: '',
         hasError: false,
+        tooltop: '',
       },
       stockValue: {
         val: '',
-        hasError: false
+        hasError: false,
+        tooltop: '',
       },
       isLoading: false
     }
@@ -30,9 +33,29 @@ export default class UserTrade extends React.Component {
       stockAmount: isWholeNumber,
       stockValue: isNumber,
     }
+    // this.tooltipTimers = [];
     this.onInputChange = this.onInputChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    // this.clearAllToolTips = this.clearAllToolTips.bind(this);
   }
+
+  // componentWillUnmount(){
+  //   clearAllTimeOut(this.tooltipTimers);
+  // }
+
+  // clearAllToolTips(){
+  //   // clear tooltips so they won't appear again if there are no errors
+  //   let copyState = { ...this.state };
+  //   let tooltips = ['stockName', 'stockAmount', 'stockValue'];
+  //   for(let i in tooltips){
+  //     copyState[tooltips[i]].tooltip = '';
+  //   }
+  //   this.tooltipTimers.push(
+  //     setTimeout(()=>{
+  //       this.setState({ copyState });
+  //     }, 2300)
+  //   );
+  // }
 
   onInputChange(e, inputKey){
     // fetch values everytime user changes input
@@ -89,13 +112,13 @@ export default class UserTrade extends React.Component {
       this.setState(valuesChange);
       return false;
     }
-    this.setState({ isLoading: true });
     let body = JSON.stringify({
       symbol: this.state.stockName.val.toUpperCase(),
       amount: parseInt(this.state.stockAmount.val, 10),
       value: parseFloat(this.state.stockValue.val, 10),
     })
     if(this.props.user){
+      this.setState({ isLoading: true });
       this.props.firebase.auth().currentUser.getIdToken(true)
         .then((idToken) => Promise.all([buyStock(idToken, body)]))
         .then((result) => {
@@ -111,18 +134,22 @@ export default class UserTrade extends React.Component {
     }
   }
 
+
+
   render(){
     return(
       <div style={{position: 'relative'}} className='trade-form'>
         <form>
-        <TextInput
+        <TextInputWithTooltip
+          tooltipMessage={this.state.stockName.tooltip}
           title='STOCK NAME'
           placeholder='Name of stock'
           autocomplete={false}
           value={this.state.stockName.val}
           hasError={this.state.stockName.hasError}
           onChange={(e) => this.onInputChange(e, 'stockName')}/>
-        <TextInput
+        <TextInputWithTooltip
+          tooltipMessage={this.state.stockValue.tooltip}
           title='VALUE'
           placeholder='Value of stock (auto)'
           disabled={true}
@@ -130,7 +157,8 @@ export default class UserTrade extends React.Component {
           value={this.state.stockValue.val}
           hasError={this.state.stockValue.hasError}
           onChange={(e) => console.log('nothing here')}/>
-        <TextInput
+        <TextInputWithTooltip
+          tooltipMessage={this.state.stockValue.tooltip}
           title='AMOUNT'
           placeholder='Amount to buy'
           autocomplete={false}

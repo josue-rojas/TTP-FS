@@ -41,6 +41,12 @@ class UserFirstPanel extends React.Component {
           let indexStockLocation = {};
           let symbolsOnly = []; //used later to subscribe and fetch open price
           let i = 0;
+          if(result[0].status || result[1].status){
+            // error check , needs to be implemented
+            // console.log('umm',result[0].status);
+            // console.log('umm1',result[1].message);
+            // return Promise.all([result[0], result[1]]);
+          }
           if(!result[1].status){
             // in the for loop we get
             // index location for each stock (index in the user holding data),

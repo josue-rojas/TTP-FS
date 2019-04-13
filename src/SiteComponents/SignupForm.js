@@ -3,8 +3,8 @@ import { ButtonwLoader } from '../Components/Buttons';
 import { CheckBox, TextInputWithTooltip } from '../Components/Inputs';
 import { Link } from "react-router-dom";
 import { hasInput, emailCheck } from '../Helpers/InputsCheck';
-import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
-import { clearAllTimeOut }  from '../Helpers/timerFunctions';
+import { clearPrevTooltip } from '../Helpers/tooltipHelpers';
+import { checkAllInputs, onInputChangeTooltip } from '../Helpers/InputFunctions';
 
 export default class SignupForm extends React.Component {
   constructor(props){
@@ -30,6 +30,7 @@ export default class SignupForm extends React.Component {
         hasError: false
       },
       isLoading: false,
+      previousTooltip: '',
     };
     this.checkInput = {
       name: hasInput,
@@ -37,23 +38,19 @@ export default class SignupForm extends React.Component {
       password: hasInput,
       checkbox: () => this.state.checkbox.val
 		};
-    this.tooltipTimers = [];
     this.onInputChange = this.onInputChange.bind(this);
     this.checkBoxChange = this.checkBoxChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.handleFirebaseAuthError = this.handleFirebaseAuthError.bind(this);
-    this.clearAllToolTips = this.clearAllToolTips.bind(this);
+    this.clearTooltipTimer = null;
   }
 
   componentWillUnmount(){
-    clearAllTimeOut(this.tooltipTimers);
+    clearTimeout(this.clearTooltipTimer);
   }
 
   onInputChange(e, inputKey){
-    let inputState = handleOnChange(e, inputKey, this.state, this.checkInput);
-    this.setState({
-      [inputKey]: inputState
-    });
+    onInputChangeTooltip(e, inputKey, this);
   }
 
   // this one is a bit different than the input change so it has it's own function
@@ -80,10 +77,11 @@ export default class SignupForm extends React.Component {
       .catch(function(error){
         thisWrapper.setState({ isLoading: false }, ()=>{
           let newState = thisWrapper.handleFirebaseAuthError(error.code, error.message, thisWrapper.state);
-          thisWrapper.setState(newState, ()=>{
-            thisWrapper.clearAllToolTips(); //ummm. this makes it more confusing
-                        // but this is setting up a timer to clear all tooltips so they won't show if there are no error
-          });
+          clearTimeout(thisWrapper.clearTooltipTimer);
+          thisWrapper.setState(newState);
+          if(newState.previousTooltip){
+            clearPrevTooltip(thisWrapper);
+          }
         });
       })
       .then((user_credentials)=>{
@@ -91,15 +89,6 @@ export default class SignupForm extends React.Component {
           user_credentials.user.updateProfile({
             displayName: thisWrapper.state.name.val
           });
-          // ummm a bad way to count users (not automatic if user is deleted...)
-          let countRef = thisWrapper.props.firebase.database().ref('count');
-          countRef.once('value')
-            .then((dataSnapshot)=>{
-              if(dataSnapshot.val()){
-                countRef.set(dataSnapshot.val()+1);
-              }
-              else countRef.set(1);
-            });
         }
       })
   }
@@ -108,25 +97,17 @@ export default class SignupForm extends React.Component {
   // returns state with changes
   handleFirebaseAuthError(errorCode, errorMessage, state){
     let copyState = {...state};
+    if(copyState.previousTooltip)
+      copyState[copyState.previousTooltip].tooltip = '';
     if(errorCode === 'auth/weak-password'){
       copyState.password.tooltip = errorMessage;
+      copyState.previousTooltip = 'password';
     }
-    else copyState.email.tooltip = errorMessage;
+    else {
+      copyState.email.tooltip = errorMessage;
+      copyState.previousTooltip = 'email';
+    }
     return copyState;
-  }
-
-  clearAllToolTips(){
-    // clear tooltips so they won't appear again if there are no errors
-    let copyState = { ...this.state };
-    let tooltips = ['password', 'name', 'email'];
-    for(let i in tooltips){
-      copyState[tooltips[i]].tooltip = '';
-    }
-    this.tooltipTimers.push(
-      setTimeout(()=>{
-        this.setState({ copyState });
-      }, 2300)
-    );
   }
 
   render(){

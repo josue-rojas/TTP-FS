@@ -3,8 +3,8 @@ import { TextInputWithTooltip } from '../Components/Inputs';
 import { ButtonwLoader } from '../Components/Buttons';
 import { Link } from "react-router-dom";
 import { hasInput, emailCheck } from '../Helpers/InputsCheck';
-import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
-import { clearAllTimeOut }  from '../Helpers/timerFunctions';
+import { checkAllInputs, onInputChangeTooltip } from '../Helpers/InputFunctions';
+import { clearPrevTooltip } from '../Helpers/tooltipHelpers';
 
 export default class SigninForm extends React.Component {
   constructor(props){
@@ -21,19 +21,19 @@ export default class SigninForm extends React.Component {
         tooltip: '',
       },
       isLoading: false,
+      previousTooltip: '',
     };
     this.checkInput = {
 			email: emailCheck,
       password: hasInput,
 		};
-    this.tooltipTimers = [];
     this.signin = this.signin.bind(this);
     this.onInputChange = this.onInputChange.bind(this);
-    this.clearAllToolTips = this.clearAllToolTips.bind(this);
+    this.clearTooltipTimer = null;
   }
 
   componentWillUnmount(){
-    clearAllTimeOut(this.tooltipTimers);
+    clearTimeout(this.clearTooltipTimer);
   }
 
   signin(){
@@ -43,7 +43,7 @@ export default class SigninForm extends React.Component {
       return false;
     }
     // clear any tooltips before continuing
-    this.clearAllToolTips(0);
+    // this.clearAllToolTips(0);
     this.setState({ isLoading: true });
     const thisWrapper = this;
     this.props.firebase.auth()
@@ -51,10 +51,12 @@ export default class SigninForm extends React.Component {
       .catch(function(error){
         thisWrapper.setState({ isLoading: false }, ()=>{
           let newState = thisWrapper.handleFirebaseAuthError(error.code, error.message, thisWrapper.state);
-          thisWrapper.setState(newState, ()=>{
-            thisWrapper.clearAllToolTips(2300); //ummm. this makes it more confusing
-                        // but this is setting up a timer to clear all tooltips so they won't show if there are no error
-          });
+          clearTimeout(thisWrapper.clearTooltipTimer);
+          thisWrapper.setState(newState);
+          // console.log('tooltip',newState.previousTooltip)
+          if(newState.previousTooltip){
+            clearPrevTooltip(thisWrapper);
+          }
         });
       });
   }
@@ -63,32 +65,21 @@ export default class SigninForm extends React.Component {
   // returns state with changes
   handleFirebaseAuthError(errorCode, errorMessage, state){
     let copyState = {...state};
+    if(copyState.previousTooltip)
+      copyState[copyState.previousTooltip].tooltip = '';
     if(errorCode === 'auth/wrong-password'){
       copyState.password.tooltip = errorMessage;
+      copyState.previousTooltip = 'password';
     }
-    else copyState.email.tooltip = errorMessage;
+    else {
+      copyState.email.tooltip = errorMessage;
+      copyState.previousTooltip = 'email';
+    }
     return copyState;
   }
 
   onInputChange(e, inputKey){
-    let inputState = handleOnChange(e, inputKey, this.state, this.checkInput);
-    this.setState({
-      [inputKey]: inputState
-    });
-  }
-
-  clearAllToolTips(timetoclear){
-    // clear tooltips so they won't appear again if there are no errors
-    let copyState = { ...this.state };
-    let tooltips = ['password', 'email'];
-    for(let i in tooltips){
-      copyState[tooltips[i]].tooltip = '';
-    }
-    this.tooltipTimers.push(
-      setTimeout(()=>{
-        this.setState({ copyState });
-      }, timetoclear)
-    );
+    onInputChangeTooltip(e, inputKey, this);
   }
 
   render(){

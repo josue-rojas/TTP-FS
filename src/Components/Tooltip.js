@@ -16,19 +16,18 @@ export default class Tooltip extends React.Component {
     this.hideTooltip = this.hideTooltip.bind(this);
   }
 
-  componentDidMount(){
-    this.hideTooltip();
-  }
-
   componentWillReceiveProps(nextProps){
-    if(nextProps.message !== this.state.message){
-      this.setState({
-        isExpire: false,
-        hide: false,
-        message: nextProps.message
-      });
-    }
-    this.hideTooltip();
+    // clearAllTimeOut(this.timer); //might need this (but works without it...)
+    this.setState({
+      isExpire: false,
+      hide: false,
+      message: nextProps.message
+    }, ()=>{
+      // this should happen after state is change because then hideTooltip won't see the message
+      // it might see '' (empty string and not hide it when it changes)
+      if(!nextProps.message) return clearAllTimeOut(this.timer);
+      this.hideTooltip();
+    });
   }
 
   componentWillUnmount(){
@@ -36,6 +35,7 @@ export default class Tooltip extends React.Component {
   }
 
   hideTooltip(){
+    if(!this.state.message) return '';
     let timerVar = setTimeout(
       () => {
         this.setState({ hide: true });

@@ -38,6 +38,36 @@ export class TextInput extends React.Component{
   }
 }
 
+// to use in your component your inputs must have tooltip ex: input: {val: '', tooltip: ''}
+// a state must have previousTooltip which is a string of the name of the previous input
+// and finally the object mus have a global var to keep the timer for the helper
+// it should be called this.clearTooltipTimer
+
+// to update an input with a tooltip
+// you need to use the tooltipHelpers for different task
+// when you are goint to update the input with a tooltips
+// you need to clear the the timer
+// clearTimeout(this.clearTooltipTimer);
+// then update set the state for new tooltips
+// and then if there exist a previousTooltip use the helper clearPrevTooltip function
+// to create a timer to clear the tooltip so it won't appear in every update (like when typing an input)
+
+// ex: updating to a state that has tooltip (the flow)
+ // 1. modify state to add tooltip message
+// let newState = {...this.state}
+// let newState.inputName.tooltip = 'a message'
+// 2. clear any clearTooltipTimer that may be running
+// clearTimeout(this.clearTooltipTimer);
+// 3. set the new state with the tooltip message
+// this.setState(newState);
+// 4. and finally call the helper function to clear the tooltip later (2300 ms)
+// this will stop it from showing up again 
+// if(newState.previousTooltip){
+//   clearPrevTooltip(this);
+// }
+
+// this might have limitations: like (i haven't tested) it probably only handles only one tooltip change
+// since the previousTooltip var only holds a (one) string
 
 // a textinput but with tooltip for messages
 export class TextInputWithTooltip extends TextInput{
