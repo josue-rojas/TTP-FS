@@ -1,5 +1,6 @@
 const functions = require('firebase-functions');
 const newUserHandler = require('./newUsers.js');
+const deleteUserHandler = require('./deleteUser.js');
 const admin = require('firebase-admin');
 
 admin.initializeApp(functions.config().firebase);
@@ -9,6 +10,11 @@ const db = admin.database();
 // create new user functions
 exports.newUser = functions.auth.user().onCreate((user)=>{
   newUserHandler(user, db);
+})
+
+// delete user data when delete user
+exports.deleteUserData = functions.auth.user().onDelete((user)=>{
+  deleteUserHandler(user, db);
 })
 
 
