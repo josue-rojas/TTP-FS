@@ -2,11 +2,12 @@
 import React from 'react';
 import PlainCard from './PlainCard';
 import '../Styles/StocksCard.css';
-import { TextInput } from './Inputs';
+import { TextInputWithTooltip } from './Inputs';
 import { ButtonwLoader } from '../Components/Buttons';
 import { isWholeNumber } from '../Helpers/InputsCheck';
-import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
+import { checkAllInputs, onInputChangeTooltip } from '../Helpers/InputFunctions';
 import { sellStock  } from '../Helpers/endpoints';
+import { clearPrevTooltip } from '../Helpers/tooltipHelpers';
 import Loader from './Loader';
 
 function SingleStock(props){
@@ -39,7 +40,8 @@ class SingleStockDynamic extends React.Component{
         hasError: false,
       },
       isFocus: false,
-      isLoading: false
+      isLoading: false,
+      previousTooltip: '',
     }
     this.checkInput = {
       amount: isWholeNumber
@@ -48,6 +50,7 @@ class SingleStockDynamic extends React.Component{
     this.handleFocus = this.handleFocus.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
+    this.clearTooltipTimer = null;
   }
 
   componentDidMount() {
@@ -55,14 +58,12 @@ class SingleStockDynamic extends React.Component{
   }
 
   componentWillUnmount() {
+    clearTimeout(this.clearTooltipTimer);
     document.removeEventListener('mousedown', this.handleFocus);
   }
 
   onInputChange(e, inputKey){
-    let inputState = handleOnChange(e, inputKey, this.state, this.checkInput);
-    this.setState({
-      [inputKey]: inputState
-    });
+    onInputChangeTooltip(e, inputKey, this);
   }
 
   handleFocus(event){
@@ -103,8 +104,16 @@ class SingleStockDynamic extends React.Component{
             // should have a callback to notify parent components
           }
           else{
-            this.setState({ isLoading: false });
-            // handle error
+            let amount = { ...this.state.amount };
+            amount.tooltip = result[0].message || 'Something went wrong';
+            clearTimeout(this.clearTooltipTimer);
+            this.setState({
+              amount: amount,
+              isLoading: false,
+            });
+            if(this.state.previousTooltip){
+              clearPrevTooltip(this);
+            }
           }
         })
         .catch((err) => console.log(err));
@@ -138,7 +147,8 @@ class SingleStockDynamic extends React.Component{
         </div>
         <div className='expand-box'>
           <form>
-            <TextInput
+            <TextInputWithTooltip
+              tooltipMessage={this.state.amount.tooltip}
               className='inverse'
               title='Amount'
               placeholder='Amount to sell'

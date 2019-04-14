@@ -61,7 +61,7 @@ export class TextInput extends React.Component{
 // 3. set the new state with the tooltip message
 // this.setState(newState);
 // 4. and finally call the helper function to clear the tooltip later (2300 ms)
-// this will stop it from showing up again 
+// this will stop it from showing up again
 // if(newState.previousTooltip){
 //   clearPrevTooltip(this);
 // }
@@ -75,7 +75,7 @@ export class TextInputWithTooltip extends TextInput{
     let extraClass = this.state.isFocus ? 'focus' : '';
     extraClass += this.props.hasError ? ' error' : '';
     return(
-      <div className={`text-input input ${extraClass}`}>
+      <div className={`text-input input ${extraClass} ${this.props.className}`}>
         <Tooltip message={this.props.tooltipMessage}/>
         <label>{this.props.title}</label>
         <input

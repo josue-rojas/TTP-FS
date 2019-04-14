@@ -53,7 +53,6 @@ export default class SigninForm extends React.Component {
           let newState = thisWrapper.handleFirebaseAuthError(error.code, error.message, thisWrapper.state);
           clearTimeout(thisWrapper.clearTooltipTimer);
           thisWrapper.setState(newState);
-          // console.log('tooltip',newState.previousTooltip)
           if(newState.previousTooltip){
             clearPrevTooltip(thisWrapper);
           }
