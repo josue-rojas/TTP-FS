@@ -38,6 +38,7 @@ class SingleStockDynamic extends React.Component{
       amount: {
         val: '',
         hasError: false,
+        tooltip: '',
       },
       isFocus: false,
       isLoading: false,
@@ -110,6 +111,7 @@ class SingleStockDynamic extends React.Component{
             this.setState({
               amount: amount,
               isLoading: false,
+              previousTooltip: 'amount'
             });
             if(this.state.previousTooltip){
               clearPrevTooltip(this);

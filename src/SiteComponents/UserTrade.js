@@ -124,6 +124,7 @@ export default class UserTrade extends React.Component {
             this.setState({
               stockAmount: stockAmount,
               isLoading: false,
+              previousTooltip: 'stockAmount',
             });
             if(this.state.previousTooltip){
               clearPrevTooltip(this);
