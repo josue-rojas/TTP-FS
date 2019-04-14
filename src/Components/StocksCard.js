@@ -97,6 +97,7 @@ class SingleStockDynamic extends React.Component{
               amount: {
                 val: '',
                 hasError: false,
+                tooltip: '',
               },
               isLoading: false,
               isFocus: false
