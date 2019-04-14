@@ -16,7 +16,8 @@
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy-site": "firebase deploy --only hosting",
-    "deploy-database": "firebase deploy --only database"
+    "deploy-database": "firebase deploy --only database",
+    "deploy-all": "npm run deploy-site; npm run deploy-database; cd ./functions; npm run deploy;"
   },
   "repository": {
     "type": "git",

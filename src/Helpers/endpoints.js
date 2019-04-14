@@ -74,5 +74,6 @@ export function getStockPrice(symbol){
 export function getStocksBatch({symbols, types}){
   let symbolArr = symbols || [];
   let typesArr = types || [];
+  if(symbolArr.length === 0) return false;
   return fetchGET(`${stocksURL}/stock/market/batch?symbols=${symbolArr.join(',').toUpperCase()}&types=${typesArr.join(',') || 'price'}`);
 }

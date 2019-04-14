@@ -50,7 +50,7 @@ function sellTransaction(req, res, db, transactionFunction){
       if(r[0] === 'done') return res.status(400).json(r[1]);
       return res.status(200).json({status:"ok"});
     })
-    .catch((err) => res.status(400).json({status: 'error', message: 'error in sell/stocksHolding', err}));
+    .catch((err) => res.status(500).json({status: 'error', message: 'error in sell/stocksHolding', err}));
 }
 
 module.exports = sellTransaction;

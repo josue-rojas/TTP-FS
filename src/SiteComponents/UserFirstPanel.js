@@ -28,6 +28,7 @@ class UserFirstPanel extends React.Component {
     }
     this.updateStockPrice = this.updateStockPrice.bind(this);
     this.signout = this.signout.bind(this);
+    this.refreshCallback = this.refreshCallback.bind(this);
   }
 
   componentWillMount(){
@@ -40,6 +41,12 @@ class UserFirstPanel extends React.Component {
           let indexStockLocation = {};
           let symbolsOnly = []; //used later to subscribe and fetch open price
           let i = 0;
+          if(result[0].status || result[1].status){
+            // error check , needs to be implemented
+            // console.log('umm',result[0].status);
+            // console.log('umm1',result[1].message);
+            // return Promise.all([result[0], result[1]]);
+          }
           if(!result[1].status){
             // in the for loop we get
             // index location for each stock (index in the user holding data),
@@ -143,6 +150,34 @@ class UserFirstPanel extends React.Component {
       .catch((error)=> console.log('error signout', error))
   }
 
+  refreshCallback(symbol, amount, value){
+    // should update stock info here
+    // add/delete subscription
+    let userStockInfo = [ ...this.state.userStockInfo ];
+    let indexStockLocation = { ...this.state.indexStockLocation };
+    let symbolStockLocation = indexStockLocation[symbol];
+    let currentAmount = userStockInfo[symbolStockLocation].amount;
+    let newAmount = currentAmount - amount;
+    let cashEarn = amount * value;
+    // if sold all stock remove subscription, indexlocation, and userStockInfo(for the table)
+    // and finally add to the cash
+    if(newAmount === 0){
+      userStockInfo.splice(symbolStockLocation, 1);
+      delete indexStockLocation[symbol];
+      removeSubscriptionLast(this.state.socket, [symbol]);
+    }
+    else {
+      userStockInfo[symbolStockLocation].amount = newAmount;
+    }
+    this.setState({
+      userStockInfo: userStockInfo,
+      indexStockLocation: indexStockLocation,
+      investmentMoney: this.state.investmentMoney - cashEarn,
+      userMoney: this.state.userMoney + cashEarn,
+    })
+    this.props.refreshCallback();
+  }
+
   render() {
     if(!this.props.user) return '...'
     let textColor = '';
@@ -161,7 +196,7 @@ class UserFirstPanel extends React.Component {
           <PlainCard className='user-info'>
             <div className='plain-card-row'>
               <div>Cash</div>
-              <div className='total'>{this.state.userMoney}</div>
+              <div className='total'>{this.state.userMoney.toFixed(2)}</div>
             </div>
             <div className='plain-card-row'>
               <div>Investments</div>
@@ -174,6 +209,7 @@ class UserFirstPanel extends React.Component {
           </PlainCard>
           <div className='user-card'>
             <StocksCard
+              refreshCallback={this.refreshCallback}
               isLoading={this.state.isLoadingHolding}
               initialLoad={this.state.initialLoad}
               firebase={this.props.firebase}

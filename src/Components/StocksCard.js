@@ -2,11 +2,12 @@
 import React from 'react';
 import PlainCard from './PlainCard';
 import '../Styles/StocksCard.css';
-import { TextInput } from './Inputs';
-import Button from './Buttons';
+import { TextInputWithTooltip } from './Inputs';
+import { ButtonwLoader } from '../Components/Buttons';
 import { isWholeNumber } from '../Helpers/InputsCheck';
-import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
+import { checkAllInputs, onInputChangeTooltip } from '../Helpers/InputFunctions';
 import { sellStock  } from '../Helpers/endpoints';
+import { clearPrevTooltip } from '../Helpers/tooltipHelpers';
 import Loader from './Loader';
 
 function SingleStock(props){
@@ -37,8 +38,11 @@ class SingleStockDynamic extends React.Component{
       amount: {
         val: '',
         hasError: false,
+        tooltip: '',
       },
       isFocus: false,
+      isLoading: false,
+      previousTooltip: '',
     }
     this.checkInput = {
       amount: isWholeNumber
@@ -47,6 +51,7 @@ class SingleStockDynamic extends React.Component{
     this.handleFocus = this.handleFocus.bind(this);
     this.submitForm = this.submitForm.bind(this);
     this.setWrapperRef = this.setWrapperRef.bind(this);
+    this.clearTooltipTimer = null;
   }
 
   componentDidMount() {
@@ -54,14 +59,12 @@ class SingleStockDynamic extends React.Component{
   }
 
   componentWillUnmount() {
+    clearTimeout(this.clearTooltipTimer);
     document.removeEventListener('mousedown', this.handleFocus);
   }
 
   onInputChange(e, inputKey){
-    let inputState = handleOnChange(e, inputKey, this.state, this.checkInput);
-    this.setState({
-      [inputKey]: inputState
-    });
+    onInputChangeTooltip(e, inputKey, this);
   }
 
   handleFocus(event){
@@ -76,23 +79,44 @@ class SingleStockDynamic extends React.Component{
       this.setState(valuesChange);
       return false;
     }
+    let amount = parseInt(this.state.amount.val, 10);
+    let symbol = this.props.stockName.toUpperCase();
+    let value = parseFloat(this.props.price, 10);
     this.setState({ isLoading: true });
     let body = JSON.stringify({
-      symbol: this.props.stockName.toUpperCase(),
-      amount: parseInt(this.state.amount.val, 10),
-      value: parseFloat(this.props.price, 10),
+      symbol: symbol,
+      amount: amount,
+      value: value,
     })
     if(this.props.user){
       this.props.firebase.auth().currentUser.getIdToken(true)
         .then((idToken) => Promise.all([sellStock(idToken, body)]))
         .then((result) => {
           if(result[0].status === 'ok'){
-            this.setState({ isLoading: false });
+            this.setState({
+              amount: {
+                val: '',
+                hasError: false,
+                tooltip: '',
+              },
+              isLoading: false,
+              isFocus: false
+            });
+            this.props.refreshCallback(symbol, amount, value);
             // should have a callback to notify parent components
           }
           else{
-            this.setState({ isLoading: false });
-            // handle error
+            let amount = { ...this.state.amount };
+            amount.tooltip = result[0].message || 'Something went wrong';
+            clearTimeout(this.clearTooltipTimer);
+            this.setState({
+              amount: amount,
+              isLoading: false,
+              previousTooltip: 'amount'
+            });
+            if(this.state.previousTooltip){
+              clearPrevTooltip(this);
+            }
           }
         })
         .catch((err) => console.log(err));
@@ -126,7 +150,8 @@ class SingleStockDynamic extends React.Component{
         </div>
         <div className='expand-box'>
           <form>
-            <TextInput
+            <TextInputWithTooltip
+              tooltipMessage={this.state.amount.tooltip}
               className='inverse'
               title='Amount'
               placeholder='Amount to sell'
@@ -134,8 +159,10 @@ class SingleStockDynamic extends React.Component{
               value={this.state.amount.val}
               hasError={this.state.amount.hasError}
               onChange={(e) => this.onInputChange(e, 'amount')}/>
-            <Button
+            <ButtonwLoader
               className='inverse'
+              inverse={true}
+              isLoading={this.state.isLoading}
               text='Sell'
               onClick={this.submitForm}/>
           </form>
@@ -181,10 +208,14 @@ export default class StocksCard extends React.Component {
     this.makeDefaultStockRow = this.makeDefaultStockRow.bind(this);
   }
 
-  makeDefaultStockRow(stockInfo){
-    let singleStocks = stockInfo.map((e, i)=>{
+  makeDefaultStockRow(stockInfo, order){
+    // reverse backwards in one line
+    // https://stackoverflow.com/a/52824441/6332768
+    let singleStocks = stockInfo.map((el, i)=>{
+      let e = order === 'desc' ? stockInfo[stockInfo.length - 1 - i] : el;
       return(
         <SingleStockDynamic
+          refreshCallback={this.props.refreshCallback}
           key={`single-stock-${e.symbol}-${i}`}
           stockName={e.symbol}
           stockAmount={e.amount}
@@ -203,8 +234,9 @@ export default class StocksCard extends React.Component {
     return singleStocks;
   }
 
-  makeDateStockRow(stockInfo){
-    let singleStocks = stockInfo.map((e, i)=>{
+  makeDateStockRow(stockInfo, order){
+    let singleStocks = stockInfo.map((el, i)=>{
+      let e = order === 'desc' ? stockInfo[stockInfo.length - 1 - i] : el;
       return(
         <SingleStockWithDate
           date={e.date}
@@ -237,8 +269,8 @@ export default class StocksCard extends React.Component {
           ''
         }
         {this.props.withDate ?
-          this.makeDateStockRow(this.props.stockInfo || []):
-          this.makeDefaultStockRow(this.props.stockInfo || [])
+          this.makeDateStockRow((this.props.stockInfo || []), 'desc'):
+          this.makeDefaultStockRow((this.props.stockInfo || []), 'asc')
         }
       </PlainCard>
     )

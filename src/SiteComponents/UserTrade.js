@@ -1,12 +1,11 @@
 import React from 'react';
-import Button from '../Components/Buttons';
-import { TextInput } from '../Components/Inputs';
-import Loader from '../Components/Loader';
+import { TextInputWithTooltip } from '../Components/Inputs';
+import { ButtonwLoader } from '../Components/Buttons';
 import { hasInput, isWholeNumber, isNumber } from '../Helpers/InputsCheck';
-import { checkAllInputs, handleOnChange } from '../Helpers/InputFunctions';
+import { checkAllInputs, onInputChangeTooltip } from '../Helpers/InputFunctions';
 import '../Styles/UserTrade.css';
 import { getStockPrice, buyStock } from '../Helpers/endpoints';
-
+import { clearPrevTooltip } from '../Helpers/tooltipHelpers';
 
 export default class UserTrade extends React.Component {
   constructor(props){
@@ -15,16 +14,20 @@ export default class UserTrade extends React.Component {
       stockName: {
         val: '',
         hasError: false,
+        tooltip: '',
       },
       stockAmount: {
         val: '',
         hasError: false,
+        tooltip: '',
       },
       stockValue: {
         val: '',
-        hasError: false
+        hasError: false,
+        tooltip: '',
       },
-      isLoading: false
+      isLoading: false,
+      previousTooltip: '',
     }
     this.checkInput = {
       stockName: hasInput,
@@ -33,10 +36,16 @@ export default class UserTrade extends React.Component {
     }
     this.onInputChange = this.onInputChange.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.clearTooltipTimer = null;
+  }
+
+  componentWillUnmount(){
+    clearTimeout(this.clearTooltipTimer);
   }
 
   onInputChange(e, inputKey){
     // fetch values everytime user changes input
+    // might be slow if you type really fast (setState is not updated right away: need fix)
     if(inputKey === 'stockName'){
       let stockValue = { ...this.state.stockValue };
       if(e.target.value.length < 1){
@@ -60,10 +69,28 @@ export default class UserTrade extends React.Component {
         })
       }
     }
-    let inputState = handleOnChange(e, inputKey, this.state, this.checkInput);
-    this.setState({
-      [inputKey]: inputState
-    });
+    onInputChangeTooltip(e, inputKey, this);
+  }
+
+  // just return an object of input values when reser (default values)
+  resetForm(){
+    return {
+      stockName: {
+        val: '',
+        hasError: false,
+        tooltip: '',
+      },
+      stockAmount: {
+        val: '',
+        hasError: false,
+        tooltip: '',
+      },
+      stockValue: {
+        val: '',
+        hasError: false,
+        tooltip: '',
+      }
+    }
   }
 
   submitForm(){
@@ -72,38 +99,58 @@ export default class UserTrade extends React.Component {
       this.setState(valuesChange);
       return false;
     }
-    this.setState({ isLoading: true });
     let body = JSON.stringify({
       symbol: this.state.stockName.val.toUpperCase(),
       amount: parseInt(this.state.stockAmount.val, 10),
       value: parseFloat(this.state.stockValue.val, 10),
     })
     if(this.props.user){
+      this.setState({ isLoading: true });
       this.props.firebase.auth().currentUser.getIdToken(true)
         .then((idToken) => Promise.all([buyStock(idToken, body)]))
         .then((result) => {
           if(result[0].status === 'ok'){
-            this.setState({ isLoading: false });
-            // should have a callback to notify parent components
+            let inputState = this.resetForm();
+            inputState.isLoading = false;
+            this.setState( inputState );
+            this.props.refreshCallback();
+          }
+          else if(result[0].status !== '200'){
+            // i think the only error for now was not having money to buy
+            // should add later stock doesnt exist in back end
+            let stockAmount = { ...this.state.stockAmount };
+            stockAmount.tooltip = result[0].message || 'Something went wrong.';
+            clearTimeout(this.clearTooltipTimer);
+            this.setState({
+              stockAmount: stockAmount,
+              isLoading: false,
+              previousTooltip: 'stockAmount',
+            });
+            if(this.state.previousTooltip){
+              clearPrevTooltip(this);
+            }
           }
         })
         .catch((err) => console.log(err));
     }
   }
 
+
+
   render(){
     return(
       <div style={{position: 'relative'}} className='trade-form'>
-        <Loader isLoading={this.state.isLoading}/>
-        <form className={this.state.isLoading ? 'inactive': ''}>
-        <TextInput
+        <form>
+        <TextInputWithTooltip
+          tooltipMessage={this.state.stockName.tooltip}
           title='STOCK NAME'
           placeholder='Name of stock'
           autocomplete={false}
           value={this.state.stockName.val}
           hasError={this.state.stockName.hasError}
           onChange={(e) => this.onInputChange(e, 'stockName')}/>
-        <TextInput
+        <TextInputWithTooltip
+          tooltipMessage={this.state.stockValue.tooltip}
           title='VALUE'
           placeholder='Value of stock (auto)'
           disabled={true}
@@ -111,14 +158,17 @@ export default class UserTrade extends React.Component {
           value={this.state.stockValue.val}
           hasError={this.state.stockValue.hasError}
           onChange={(e) => console.log('nothing here')}/>
-        <TextInput
+        <TextInputWithTooltip
+          tooltipMessage={this.state.stockAmount.tooltip}
           title='AMOUNT'
           placeholder='Amount to buy'
           autocomplete={false}
           value={this.state.stockAmount.val}
           hasError={this.state.stockAmount.hasError}
           onChange={(e) => this.onInputChange(e, 'stockAmount')}/>
-        <Button
+        <ButtonwLoader
+          inverse={true}
+          isLoading={this.state.isLoading}
           text='Buy'
           onClick={this.submitForm}/>
         </form>

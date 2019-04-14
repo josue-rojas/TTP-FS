@@ -41,3 +41,18 @@ export function handleOnChange(e, inputKey, state, checkInput){
   inputState.hasError = !checkInput[inputKey](e.target.value);
   return inputState;
 }
+
+// does handleOnChange()
+// and sets clears tooltips
+// it is also repeated code in SignupForm and SigninForm
+export function onInputChangeTooltip(e, inputKey, thisScope){
+  let inputState = handleOnChange(e, inputKey, thisScope.state, thisScope.checkInput);
+  let newStateUpdate = { [inputKey]: inputState };
+  // in case there is a tooltip
+  if(thisScope.state.previousTooltip) {
+    newStateUpdate[thisScope.state.previousTooltip] = { ...thisScope.state[thisScope.state.previousTooltip] };
+    newStateUpdate[thisScope.state.previousTooltip].tooltip = '';
+    newStateUpdate.previousTooltip = '';
+  }
+  thisScope.setState(newStateUpdate);
+}

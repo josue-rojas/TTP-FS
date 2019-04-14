@@ -7,6 +7,7 @@ import io from 'socket.io-client';
 // and returns socket
 export function connectIEXLast({ callback, symbols }){
   let socket= io('https://ws-api.iextrading.com/1.0/last');
+  // let socket= io('https://ws-api.iextrading.com/1.0/price');
   socket.on('connect', () => {
     socket.emit('subscribe', symbols.join(','));
     if(callback) callback();
@@ -18,7 +19,7 @@ export function connectIEXLast({ callback, symbols }){
 // symbols = []
 // return true if subscribe
 export function addSubscriptionLast(socket, symbols){
-  if(socket.connected){
+  if(socket && socket.connected){
     socket.emit('subscribe', symbols.join(','));
     return true;
   }
@@ -27,7 +28,7 @@ export function addSubscriptionLast(socket, symbols){
 
 //
 export function removeSubscriptionLast(socket, symbols){
-  if(socket.connected){
+  if(socket && socket.connected){
     socket.emit('unsubscribe', symbols.join(','));
     return true;
   }
@@ -35,11 +36,12 @@ export function removeSubscriptionLast(socket, symbols){
 }
 
 export function socketRemoveListeners(socket, listeners){
-  if(socket.connected){
+  if(socket && socket.connected){
     for(let i in listeners){
       socket.removeListener(listeners[i],
         () => console.log(`remove ${listeners[i]}`));
     }
+    socket.close();
   }
   return false;
 }
