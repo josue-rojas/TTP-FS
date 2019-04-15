@@ -39,7 +39,16 @@ a
   .plain-card
     color: white
     background-color: rgba(72, 72, 72, 0.32)
+    background-color: rgba(0, 0, 0, 0.42)
     border-color: rgba(70, 70, 70, 0.13)
+    .input.inverse
+      input
+        border-bottom-color: rgba(220, 223, 228, 0.58)
+        &::placeholder
+          color: rgba(220, 223, 228, 0.58)
+        color: white
+      &::after
+        background-color: white
     .single-stock
       border-color: rgba(220, 223, 228, 0.58)
     .single-stock .right-line::after
