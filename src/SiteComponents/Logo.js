@@ -4,7 +4,9 @@ import '../Styles/Logo.css';
 
 export default function Logo(props){
   return(
-    <div className='icon'>
+    <div
+      onClick={props.onClick ? props.onClick : ()=> false}
+      className='icon'>
       <img src={Icon} alt='ufo-icon'/>
     </div>
   );
