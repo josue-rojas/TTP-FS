@@ -30,12 +30,14 @@ class TwoPanelMain extends React.Component {
       sActive: false, // for sPanel when user login
       refreshStateKeyFirstPanel: Date.now(),
       refreshStateKeyHistoryPanel: Date.now(),
+      altColor: false,
     }
     this.getFPanel = this.getFPanel.bind(this);
     this.getSPanel = this.getSPanel.bind(this);
     this.toggleSPanel = this.toggleSPanel.bind(this);
     this.refreshHistory = this.refreshHistory.bind(this);
     this.refreshUserPanel = this.refreshUserPanel.bind(this);
+    this.toogleAltColor = this.toogleAltColor.bind(this);
   }
 
   componentDidMount(){
@@ -66,6 +68,7 @@ class TwoPanelMain extends React.Component {
     }
     else if(this.props.location.pathname === '/') {
       return (<UserFirstPanel
+        altColorToggle={this.toogleAltColor}
         refreshCallback={this.refreshHistory}
         key={this.state.refreshStateKeyFirstPanel}
         toggleSPanel={this.toggleSPanel}
@@ -100,9 +103,13 @@ class TwoPanelMain extends React.Component {
     this.setState({ refreshStateKeyFirstPanel: Date.now() });
   }
 
+  toogleAltColor(){
+    this.setState({ altColor: !this.state.altColor });
+  }
+
   render(){
     return(
-      <div className="App">
+      <div className={`App ${this.state.altColor ? 'alt-color' : ''}`}>
         <TwoPanels
           className={(this.state.user && !this.state.sActive) || this.state.initStart ? 'fActive' : ''}
           firstPanel={this.getFPanel()}

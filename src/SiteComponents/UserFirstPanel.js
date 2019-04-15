@@ -187,7 +187,7 @@ class UserFirstPanel extends React.Component {
     return(
       <div className='user-panel panel-content'>
         <div className='top-header'>
-          <Logo/>
+          <Logo onClick={this.props.altColorToggle}/>
           <MenuIcon
             isActive={this.props.sActive}
             onClick={this.props.toggleSPanel}/>
