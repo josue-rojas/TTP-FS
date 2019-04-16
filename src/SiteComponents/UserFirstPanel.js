@@ -8,6 +8,7 @@ import { withRouter } from "react-router-dom";
 import '../Styles/UserFirstPanel.css';
 import Logo from './Logo';
 import { connectIEXLast, removeSubscriptionLast, socketRemoveListeners } from '../Helpers/socketAPI.js';
+import { clearAllTimeOut } from '../Helpers/timerFunctions';
 
 // one of the props include the user so we won't have to send another request
 class UserFirstPanel extends React.Component {
@@ -26,6 +27,8 @@ class UserFirstPanel extends React.Component {
       listeners: [],
       socket: null,
     }
+    this.errorFetchTryAgain = this.errorFetchTryAgain.bind(this);
+    this.fetchAttempTimer = [];
     this.updateStockPrice = this.updateStockPrice.bind(this);
     this.signout = this.signout.bind(this);
     this.refreshCallback = this.refreshCallback.bind(this);
@@ -33,6 +36,7 @@ class UserFirstPanel extends React.Component {
 
   componentWillMount(){
     if(this.props.user){
+      // spaguetties fetches.....
       this.props.firebase.auth().currentUser.getIdToken(true)
         .then((idToken) => Promise.all([getUserMoney(idToken), getStocksHolding(idToken)]))
         .then((result) => {
@@ -40,18 +44,16 @@ class UserFirstPanel extends React.Component {
           let investmentMoney = 0;
           let indexStockLocation = {};
           let symbolsOnly = []; //used later to subscribe and fetch open price
-          let i = 0;
-          if(result[0].status || result[1].status){
-            // error check , needs to be implemented
-            // console.log('umm',result[0].status);
-            // console.log('umm1',result[1].message);
-            // return Promise.all([result[0], result[1]]);
+          let errorFetch = false;
+          if(result[0].status){
+            errorFetch = true; // used to trigger fetch for money if no money found
           }
           if(!result[1].status){
             // in the for loop we get
             // index location for each stock (index in the user holding data),
             // array of symbols to be able to later fetch/subscribeto data easier
             // and stocksHolding whihc is the object with data needed for each row in the card
+            let i = 0;
             for(let e in result[1]){
               indexStockLocation[result[1][e].symbol] = i++;
               symbolsOnly.push(result[1][e].symbol);
@@ -64,7 +66,7 @@ class UserFirstPanel extends React.Component {
             }
           }
           this.setState({
-            userMoney: result[0].money,
+            userMoney: result[0].money || 0,
             investmentMoney: investmentMoney,
             initialInvestmentMoney: investmentMoney,
             userStockInfo: stocksHolding,
@@ -75,7 +77,8 @@ class UserFirstPanel extends React.Component {
            // and the open stock prices
            return Promise.all([
              symbolsOnly,
-             getStocksBatch({ symbols: symbolsOnly, types:['ohlc'] })
+             getStocksBatch({ symbols: symbolsOnly, types:['ohlc'] }),
+             errorFetch
            ]);
         })
         .then((promiseData)=>{
@@ -96,14 +99,48 @@ class UserFirstPanel extends React.Component {
           }
           this.setState({
             socket: socket,
-            isLoadingHolding: false,
+            isLoadingHolding: promiseData[2],
             userStockInfo: userStockInfo,
             listeners: ['message', 'connect'],
           });
-
+          if(promiseData[2]) this.errorFetchTryAgain(0);
         })
         .catch((err) => console.log('err', err));
     }
+  }
+
+  errorFetchTryAgain(attemptNum){
+    let attemtsTimeOut = [100, 2000, 5000]; //try three times with those timers
+    if(attemptNum > attemtsTimeOut.length){
+      console.log('error fetching money')
+      return this.setState({ userMoney: 'Error fetching money' });
+    }
+    this.fetchAttempTimer.push(setTimeout(()=>{
+      if(this.props.user){
+        this.props.firebase.auth().currentUser.getIdToken(true)
+          .then((idToken) => Promise.all([getUserMoney(idToken)]))
+          .then((result) => {
+            console.log('attempfetch', attemptNum);
+            if(result[0].status){
+              // try again (might need to redo to avoid recursion)
+              this.errorFetchTryAgain(++attemptNum);
+            }
+            else {
+              this.setState({
+                userMoney: result[0].money || 0,
+                isLoadingHolding: false
+               });
+            }
+          })
+      }
+    }, attemtsTimeOut[attemptNum]));
+  }
+
+  formatMoney(num){
+    if(typeof num === 'number'){
+      return num.toFixed(2);
+    }
+    return '0.00';
   }
 
   componentDidMount(){
@@ -116,8 +153,10 @@ class UserFirstPanel extends React.Component {
   }
 
   componentWillUnmount(){
-    socketRemoveListeners(this.state.socket, this.state.listeners)
+    socketRemoveListeners(this.state.socket, this.state.listeners);
+    clearAllTimeOut(this.fetchAttempTimer);
   }
+
 
   // used in socket subscribe to update prices
   updateStockPrice(data){
@@ -196,15 +235,15 @@ class UserFirstPanel extends React.Component {
           <PlainCard className='user-info'>
             <div className='plain-card-row'>
               <div>Cash</div>
-              <div className='total'>{this.state.userMoney.toFixed(2)}</div>
+              <div className='total'>{this.formatMoney(this.state.userMoney)}</div>
             </div>
             <div className='plain-card-row'>
               <div>Investments</div>
-              <div className='total'>{this.state.investmentMoney.toFixed(2)}</div>
+              <div className='total'>{this.formatMoney(this.state.investmentMoney)}</div>
             </div>
             <div className='plain-card-row bold'>
               <div>Total</div>
-              <div className={`total ${textColor}`}>{(this.state.userMoney + this.state.investmentMoney).toFixed(2)}</div>
+              <div className={`total ${textColor}`}>{this.formatMoney(this.state.userMoney + this.state.investmentMoney)}</div>
             </div>
           </PlainCard>
           <div className='user-card'>

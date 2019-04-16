@@ -10,23 +10,24 @@ import { sellStock  } from '../Helpers/endpoints';
 import { clearPrevTooltip } from '../Helpers/tooltipHelpers';
 import Loader from './Loader';
 
-function SingleStock(props){
-  return(
-    <div className='single-stock'>
-      <div className='left-info'>
-        <div className='stock-name'>
-          {props.stockName}
-        </div>
-        <div className='amount'>
-          {props.stockAmount} Shares
-        </div>
-      </div>
-      <div className='right-info'>
-        <span>{props.price}</span>
-      </div>
-    </div>
-  )
-}
+// not used
+// function SingleStock(props){
+//   return(
+//     <div className='single-stock'>
+//       <div className='left-info'>
+//         <div className='stock-name'>
+//           {props.stockName}
+//         </div>
+//         <div className='amount'>
+//           {props.stockAmount} Shares
+//         </div>
+//       </div>
+//       <div className='right-info'>
+//         <span>{props.price}</span>
+//       </div>
+//     </div>
+//   )
+// }
 
 // a singlestock but with more features
 // able to sell stock
