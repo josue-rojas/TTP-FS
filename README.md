@@ -14,3 +14,4 @@ This project is simulating trading using [IEX Trading AP](https://iextrading.com
 - Node.js (javascript) for endpoints (api)
 - React.js for for front-end
 - SASS for styling (front-end)
+- Socket.io for live trading prices
